@@ -1,0 +1,12 @@
+﻿<div class="droplet-container" style="@_dropletCss">
+    <svg>
+        <circle class="droplet" cx="25" cy="25" r="20" stroke="indigo" stroke-width="2" fill="aqua" />
+    </svg>
+</div>
+
+@code {
+
+    [Parameter] public DropletModel Model { get; set; }
+
+    string _dropletCss => $"bottom: {Model.DistanceFromBottom}px; left: {Model.DistanceFromLeft}px";
+}

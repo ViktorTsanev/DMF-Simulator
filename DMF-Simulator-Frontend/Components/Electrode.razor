@@ -1,0 +1,13 @@
+﻿<div class="electrode-container" style="@_electrodeCss">
+    <svg>
+        <rect class="electrode" width="50" height="50" style="fill:#2F4F4F;stroke-width:2;stroke:rgb(0,0,0)" />
+    </svg>
+</div>
+
+@code {
+
+    [Parameter] public ElectrodeModel Model { get; set; }
+
+    string _electrodeCss => $"bottom: {Model.DistanceFromBottom}px; left: {Model.DistanceFromLeft}px";
+
+}

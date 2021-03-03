@@ -1,0 +1,20 @@
+﻿<div class="simulator-container" @onclick="_simulatorManager.StartSimulator">
+    <Droplet Model="_simulatorManager.Droplet" />
+
+    @foreach (var electrode in _simulatorManager.Electrodes)
+    {
+        <Electrode Model="electrode" />
+    }
+
+</div>
+
+@code {
+
+    SimulatorManager _simulatorManager;
+
+    protected override void OnInitialized()
+    {
+        _simulatorManager = new();
+        _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
+    }
+}
