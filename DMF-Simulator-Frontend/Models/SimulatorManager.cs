@@ -8,17 +8,20 @@ namespace DMF_Simulator_Frontend.Models
     public class SimulatorManager
     {
         private readonly int _speed = 2;
-
         public event EventHandler MainLoopCompleted;
-
         public DropletModel Droplet { get; private set; }
         public List<ElectrodeModel> Electrodes { get; private set; }
         public bool IsRunning { get; private set; } = false;
 
-        public SimulatorManager()
+        public SimulatorManager(BoardModel boardModel)
         {
             Droplet = new();
-            Electrodes = new();
+            Electrodes = boardModel.electrodes.ToList();
+            Console.WriteLine(Electrodes.Count + " manager"); //12
+            foreach (ElectrodeModel e in Electrodes)
+            {
+                Console.WriteLine(e.positionX);
+            }
         }
 
         public async void MainLoop()
@@ -39,10 +42,13 @@ namespace DMF_Simulator_Frontend.Models
         {
             if (!Electrodes.Any())
             {
-                for (int i = 0; i < 20; i++)
+                /*for (int i = 0; i < 20; i++)
                 {
                     Electrodes.Add(new ElectrodeModel());
-                }
+                }*/
+                /*BoardModel m = new BoardModel();
+                m = await Electrode.GetData();
+                Electrodes = m.electrodes.ToList();*/
             }
         }
 

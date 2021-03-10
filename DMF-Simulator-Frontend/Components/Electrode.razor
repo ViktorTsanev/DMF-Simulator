@@ -1,13 +1,28 @@
-﻿<div class="electrode-container" style="@_electrodeCss">
-    <svg>
-        <rect class="electrode" width="50" height="50" style="fill:#2F4F4F;stroke-width:2;stroke:rgb(0,0,0)" />
-    </svg>
-</div>
+﻿<!--<Tooltip Text="@Model.ID.ToString()">-->
+    <div class="electrode-container" style="@_electrodeCss">
+        <svg>
+            <rect class="electrode" width="@Model.sizeX" height="@Model.sizeY" style="fill:#2F4F4F;stroke-width:2;stroke:rgb(0,0,0)" />
+        </svg>
+    </div>
+<!--</Tooltip>-->
 
 @code {
 
-    [Parameter] public ElectrodeModel Model { get; set; }
+    [Parameter]
+    public ElectrodeModel Model { get; set; }
 
-    string _electrodeCss => $"bottom: {Model.DistanceFromBottom}px; left: {Model.DistanceFromLeft}px";
+    string _electrodeCss => $"left: {Model.positionX}px; top: {Model.positionY}px";
+
+    /*public BoardModel board;
+
+    public static async Task<BoardModel> GetData()
+    {
+        return await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
+    }*/
+
+    /*protected override async Task OnInitializedAsync()
+    {
+        board = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
+    }*/
 
 }

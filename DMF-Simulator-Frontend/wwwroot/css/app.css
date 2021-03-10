@@ -50,7 +50,7 @@ a, .btn-link {
     }
 
 .simulator-container {
-    background-color: forestgreen;
+    /*background-color: forestgreen;*/
     width: 500px;
     height: 500px;
     position: absolute;

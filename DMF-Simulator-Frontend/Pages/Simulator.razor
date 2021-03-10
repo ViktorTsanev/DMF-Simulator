@@ -1,3 +1,23 @@
 ﻿@page "/simulator"
+@inject HttpClient Http
 
-<SimulatorContainer />
+@if (boardModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <SimulatorContainer boardModel="@boardModel" />
+}
+
+@code {
+    BoardModel boardModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("sth");
+        boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
+        //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
+        Console.WriteLine(boardModel.electrodes.Count()); //12
+    }
+}
