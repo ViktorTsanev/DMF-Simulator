@@ -50,15 +50,12 @@ a, .btn-link {
     }
 
 .simulator-container {
-    /*background-color: forestgreen;*/
     width: 500px;
     height: 500px;
     position: absolute;
 }
 
 .electrode-container {
-    width: 20px;
-    height: 20px;
     position: absolute;
 }
 

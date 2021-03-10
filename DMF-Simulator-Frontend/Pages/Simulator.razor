@@ -15,9 +15,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("sth");
         boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
-        Console.WriteLine(boardModel.electrodes.Count()); //12
     }
 }

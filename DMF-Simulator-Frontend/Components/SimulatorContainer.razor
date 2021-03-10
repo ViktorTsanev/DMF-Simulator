@@ -9,19 +9,14 @@
 </div>
 
 @code {
-
     public SimulatorManager _simulatorManager;
     [Parameter]
     public BoardModel boardModel { get; set; }
 
     protected override void OnInitialized()
     {
-        //Console.WriteLine("sth");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
-        //Console.WriteLine(boardModel.electrodes.Count()); //12
         _simulatorManager = new(boardModel);
-        Console.WriteLine("sth2Cont");
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
     }
-
 }

@@ -1,15 +1,31 @@
 ﻿<Tooltip Text="@Model.ID.ToString()">
     <div class="electrode-container" style="@_electrodeCss">
         <svg>
-            <rect class="electrode" width="@Model.sizeX" height="@Model.sizeY" style="fill:#2F4F4F;stroke-width:2;stroke:rgb(0,0,0)" />
+            @if (@Model.Shape == 0)
+            {
+                <rect class="electrode" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" />
+            }
+            else if (@Model.Shape == 1)
+            {
+                // polygon
+            }
         </svg>
     </div>
 </Tooltip>
 
 @code {
-
     [Parameter]
     public ElectrodeModel Model { get; set; }
 
-    string _electrodeCss => $"left: {Model.positionX}px; top: {Model.positionY}px";
+    private string _electrodeCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
+    private string _shapeCss => $"fill:{_fill}; stroke-width:{_strokeWidth}; stroke:{_stroke}";
+
+    private string _fill;
+    private int _strokeWidth = 1;
+    private string _stroke = "black";
+
+    protected override void OnInitialized()
+    {
+        _fill = Model.Status == 0 ? "yellow" : "red";
+    }
 }
