@@ -17,11 +17,6 @@ namespace DMF_Simulator_Frontend.Models
         {
             Droplet = new();
             Electrodes = boardModel.electrodes.ToList();
-            Console.WriteLine(Electrodes.Count + " manager"); //12
-            foreach (ElectrodeModel e in Electrodes)
-            {
-                Console.WriteLine(e.positionX);
-            }
         }
 
         public async void MainLoop()
@@ -42,13 +37,6 @@ namespace DMF_Simulator_Frontend.Models
         {
             if (!Electrodes.Any())
             {
-                /*for (int i = 0; i < 20; i++)
-                {
-                    Electrodes.Add(new ElectrodeModel());
-                }*/
-                /*BoardModel m = new BoardModel();
-                m = await Electrode.GetData();
-                Electrodes = m.electrodes.ToList();*/
             }
         }
 

@@ -5,8 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Components\Tooltip.razor" />
-    <Content Remove="wwwroot\css\Tooltip.razor.css" />
     <Content Remove="wwwroot\sample-data\Board.json" />
   </ItemGroup>
 
