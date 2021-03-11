@@ -4,11 +4,17 @@ namespace DMF_Simulator_Frontend.Models
 {
     public class DropletModel
     {
-        public int DistanceFromBottom { get; private set; } = 450;
-        public int DistanceFromLeft { get; private set; } = 220;
+        public string Name { get; set; }
+        public int ID { get; set; }
+        public int PositionX { get; set; }
+        public int PositionY { get; set; }
+        public int SizeX { get; set; }
+        public int SizeY { get; set; }
+        public string Color { get; set; }
+        public float Temperature { get; set; }
         public void MoveDown(int speed)
         {
-            DistanceFromBottom -= speed;
+            PositionY -= speed;
         }
     }
 }

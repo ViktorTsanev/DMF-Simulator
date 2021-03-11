@@ -9,14 +9,14 @@ namespace DMF_Simulator_Frontend.Models
     {
         private readonly int _speed = 2;
         public event EventHandler MainLoopCompleted;
-        public DropletModel Droplet { get; private set; }
+        public List<DropletModel> Droplets { get; private set; }
         public List<ElectrodeModel> Electrodes { get; private set; }
         public bool IsRunning { get; private set; } = false;
 
         public SimulatorManager(BoardModel boardModel)
         {
-            Droplet = new();
-            Electrodes = boardModel.electrodes.ToList();
+            Droplets = boardModel.Droplets;
+            Electrodes = boardModel.Electrodes;
         }
 
         public async void MainLoop()
@@ -24,8 +24,12 @@ namespace DMF_Simulator_Frontend.Models
             IsRunning = true;
             while(IsRunning)
             {
-                MoveObjects();
-                FinishAnimation();
+                if (Droplets != null)
+                {
+                    MoveObjects();
+                    FinishAnimation();
+                }
+
                 ManageElectrodes();
 
                 MainLoopCompleted?.Invoke(this, EventArgs.Empty);
@@ -42,12 +46,12 @@ namespace DMF_Simulator_Frontend.Models
 
         private void MoveObjects()
         {
-            Droplet.MoveDown(_speed);
+            Droplets.First().MoveDown(_speed);
         }
 
         private void FinishAnimation()
         {
-            if (Droplet.DistanceFromBottom <= 0)
+            if (Droplets.First().PositionY <= 0)
                 EndSimulator();
         }
 
@@ -55,7 +59,7 @@ namespace DMF_Simulator_Frontend.Models
         {
             if (!IsRunning)
             {
-                Droplet = new();
+                //Droplets = 
                 MainLoop();
             }
         }

@@ -1,9 +1,18 @@
 ﻿<div class="simulator-container" @onclick="_simulatorManager.StartSimulator">
-    <Droplet Model="_simulatorManager.Droplet" />
-
-    @foreach (var electrode in _simulatorManager.Electrodes)
+    @if (_simulatorManager.Droplets != null)
     {
-        <Electrode Model="electrode" />
+        @foreach (var droplet in _simulatorManager.Droplets)
+        {
+            <Droplet Model="droplet" />
+        }
+    }
+
+    @if (_simulatorManager.Electrodes != null)
+    {
+        @foreach (var electrode in _simulatorManager.Electrodes)
+        {
+            <Electrode Model="electrode" />
+        }
     }
 
 </div>

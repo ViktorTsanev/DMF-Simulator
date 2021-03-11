@@ -1,6 +1,6 @@
 ﻿<div class="droplet-container" style="@_dropletCss">
     <svg>
-        <circle class="droplet" cx="25" cy="25" r="20" stroke="indigo" stroke-width="2" fill="aqua" />
+        <ellipse class="droplet" cx="@Model.PositionX" cy="@Model.PositionY" rx="@Model.SizeX" ry="@Model.SizeY" stroke="indigo" stroke-width="2" fill="aqua" />
     </svg>
 </div>
 
@@ -8,5 +8,5 @@
 
     [Parameter] public DropletModel Model { get; set; }
 
-    string _dropletCss => $"bottom: {Model.DistanceFromBottom}px; left: {Model.DistanceFromLeft}px";
+    string _dropletCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
 }
