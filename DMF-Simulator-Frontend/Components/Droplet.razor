@@ -1,17 +1,20 @@
 ﻿<div class="droplet-container" style="@_dropletCss">
     <svg>
-        <ellipse class="droplet" cx="@Model.PositionX" cy="@Model.PositionY" rx="@xRadius" ry="@yRadius" style="@_shapeCss" />
+        <ellipse class="droplet" cx="@xCenter" cy="@yCenter" rx="@xRadius" ry="@yRadius" style="@_shapeCss" />
     </svg>
 </div>
 
 @code {
     [Parameter] public DropletModel Model { get; set; }
 
-    private string _dropletCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
+    private string _dropletCss => $"width: {Model.SizeX}px; height: {Model.SizeY}";
     private string _shapeCss => $"fill:{Model.Color}; stroke-width:{_strokeWidth}; stroke:{_stroke}";
 
     private double xRadius => Model.SizeX / 2;
     private double yRadius => Model.SizeY / 2;
+
+    private double xCenter => Model.PositionX + xRadius / Math.Sqrt(2);
+    private double yCenter => Model.PositionY + yRadius / Math.Sqrt(2);
 
     private double _strokeWidth = 0.5;
     private string _stroke = "black";

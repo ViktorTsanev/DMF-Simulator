@@ -1,0 +1,21 @@
+﻿<div class="bubble-container" style="@_bubbleCss">
+    <svg>
+        <ellipse class="bubble" cx="@xCenter" cy="@yCenter" rx="@xRadius" ry="@yRadius" style="@_shapeCss" />
+    </svg>
+</div>
+
+@code {
+    [Parameter] public BubbleModel Model { get; set; }
+
+    private string _bubbleCss => $"width: {Model.SizeX}px; height: {Model.SizeY}";
+    private string _shapeCss => $"fill-opacity: 0; stroke-width:{_strokeWidth}; stroke:{_stroke}";
+
+    private double xRadius => Model.SizeX / 2;
+    private double yRadius => Model.SizeY / 2;
+
+    private double xCenter => Model.PositionX + xRadius / Math.Sqrt(2);
+    private double yCenter => Model.PositionY + yRadius / Math.Sqrt(2);
+
+    private double _strokeWidth = 0.5;
+    private string _stroke = "black";
+}

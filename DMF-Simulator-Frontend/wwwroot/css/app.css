@@ -50,8 +50,6 @@ a, .btn-link {
     }
 
 .simulator-container {
-    width: 500px;
-    height: 500px;
     position: absolute;
 }
 
@@ -65,6 +63,11 @@ a, .btn-link {
 }
 
 .actuator-container {
+    position: absolute;
+    z-index: 1;
+}
+
+.bubble-container {
     position: absolute;
     z-index: 1;
 }

@@ -12,13 +12,17 @@ namespace DMF_Simulator_Frontend.Models
         public List<DropletModel> Droplets { get; private set; }
         public List<ElectrodeModel> Electrodes { get; private set; }
         public List<ActuatorModel> Actuators { get; private set; }
+        public List<BubbleModel> Bubbles { get; private set; }
+        public List<InformationModel> InformationList { get; private set; }
         public bool IsRunning { get; private set; } = false;
 
         public SimulatorManager(BoardModel boardModel)
         {
+            InformationList = boardModel.InformationList;
             Droplets = boardModel.Droplets;
             Electrodes = boardModel.Electrodes;
             Actuators = boardModel.Actuators;
+            Bubbles = boardModel.Bubbles;
         }
 
         public async void MainLoop()
@@ -53,7 +57,7 @@ namespace DMF_Simulator_Frontend.Models
 
         private void FinishAnimation()
         {
-            if (Droplets.First().PositionY <= 0)
+            if (Droplets.First().PositionY >= 60 - Droplets.First().SizeY)
                 EndSimulator();
         }
 
