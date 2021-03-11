@@ -23,7 +23,7 @@
     public ElectrodeModel Model { get; set; }
 
     private string _electrodeCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
-    private string _shapeCss => $"fill:{(Model.Status == 0 ? "yellow" : "red")}; stroke-width:{_strokeWidth}; stroke:{_stroke}";
+    private string _shapeCss => $"fill: {(Model.Status == 0 ? "yellow" : "red")}; stroke-width: {_strokeWidth}; stroke: {_stroke}";
 
     private int _strokeWidth = 1;
     private string _stroke = "black";

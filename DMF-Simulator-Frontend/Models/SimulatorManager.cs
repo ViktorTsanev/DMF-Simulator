@@ -11,12 +11,14 @@ namespace DMF_Simulator_Frontend.Models
         public event EventHandler MainLoopCompleted;
         public List<DropletModel> Droplets { get; private set; }
         public List<ElectrodeModel> Electrodes { get; private set; }
+        public List<ActuatorModel> Actuators { get; private set; }
         public bool IsRunning { get; private set; } = false;
 
         public SimulatorManager(BoardModel boardModel)
         {
             Droplets = boardModel.Droplets;
             Electrodes = boardModel.Electrodes;
+            Actuators = boardModel.Actuators;
         }
 
         public async void MainLoop()
