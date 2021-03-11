@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DMF_Simulator_Frontend.Models
+﻿namespace DMF_Simulator_Frontend.Models
 {
     public class DropletModel
     {
@@ -14,7 +12,7 @@ namespace DMF_Simulator_Frontend.Models
         public float Temperature { get; set; }
         public void MoveDown(int speed)
         {
-            PositionY -= speed;
+            PositionY += speed;
         }
     }
 }

@@ -1,31 +1,30 @@
-﻿<Tooltip Text="@Model.ID.ToString()">
-    <div class="electrode-container" style="@_electrodeCss">
-        <svg>
-            @if (@Model.Shape == 0)
+﻿<!--<Tooltip Text="@Model.ID.ToString()">-->
+<div class="electrode-container" style="@_electrodeCss">
+    <svg>
+        @if (@Model.Shape == 0)
+        {
+            <rect class="electrode" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" />
+        }
+        else if (@Model.Shape == 1)
+        {
+            string coords = "";
+            @foreach (var corner in @Model.Corners)
             {
-                <rect class="electrode" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" />
+                coords += corner.First() + "," + corner.Last() + " ";
             }
-            else if (@Model.Shape == 1)
-            {
-                // polygon
-            }
-        </svg>
-    </div>
-</Tooltip>
+            <polygon points="@coords" style="@_shapeCss" />
+        }
+    </svg>
+</div>
+<!--</Tooltip>-->
 
 @code {
     [Parameter]
     public ElectrodeModel Model { get; set; }
 
     private string _electrodeCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
-    private string _shapeCss => $"fill:{_fill}; stroke-width:{_strokeWidth}; stroke:{_stroke}";
+    private string _shapeCss => $"fill:{(Model.Status == 0 ? "yellow" : "red")}; stroke-width:{_strokeWidth}; stroke:{_stroke}";
 
-    private string _fill;
     private int _strokeWidth = 1;
     private string _stroke = "black";
-
-    protected override void OnInitialized()
-    {
-        _fill = Model.Status == 0 ? "yellow" : "red";
-    }
 }

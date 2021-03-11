@@ -15,14 +15,14 @@
       "electrodeID": 0,
       "driverID": -1,
       "shape": 1,
-      "positionX": 20,
+      "positionX": 0,
       "positionY": 0,
-      "sizeX": 0,
-      "sizeY": 0,
+      "sizeX": 20,
+      "sizeY": 20,
       "status": 0,
       "corners": [
-        [ 0, 0 ],
-        [ -20, 20 ],
+        [ 20, 0 ],
+        [ 20, 20 ],
         [ 0, 20 ]
       ]
     },
@@ -133,8 +133,8 @@
       "shape": 1,
       "positionX": 0,
       "positionY": 40,
-      "sizeX": 0,
-      "sizeY": 0,
+      "sizeX": 20,
+      "sizeY": 20,
       "status": 0,
       "corners": [
         [ 0, 0 ],
@@ -245,7 +245,7 @@
       "positionY": "25",
       "sizeX": "10",
       "sizeY": "10",
-      "color": "brown",
+      "color": "#6f4e37",
       "temperature": "82"
     },
 
@@ -257,7 +257,7 @@
       "positionY": "25",
       "sizeX": "10",
       "sizeY": "10",
-      "color": null,
+      "color": "#00FFFF",
       "temperature": "20"
     }
   ],
