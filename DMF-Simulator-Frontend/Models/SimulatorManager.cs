@@ -52,7 +52,8 @@ namespace DMF_Simulator_Frontend.Models
 
         private void MoveObjects()
         {
-            Droplets.First().MoveDown(_speed);
+            if (Droplets.First().PositionY < 60 - Droplets.First().SizeY)
+                Droplets.First().MoveDown(_speed);
         }
 
         private void FinishAnimation()
