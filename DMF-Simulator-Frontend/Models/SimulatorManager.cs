@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,22 +6,14 @@ namespace DMF_Simulator_Frontend.Models
 {
     public class SimulatorManager
     {
-        private readonly int _speed = 2;
+        public BoardModel BoardModel { get; private set; }
         public event EventHandler MainLoopCompleted;
-        public List<DropletModel> Droplets { get; private set; }
-        public List<ElectrodeModel> Electrodes { get; private set; }
-        public List<ActuatorModel> Actuators { get; private set; }
-        public List<BubbleModel> Bubbles { get; private set; }
-        public List<InformationModel> InformationList { get; private set; }
         public bool IsRunning { get; private set; } = false;
+        private readonly int _speed = 2;
 
         public SimulatorManager(BoardModel boardModel)
         {
-            InformationList = boardModel.InformationList;
-            Droplets = boardModel.Droplets;
-            Electrodes = boardModel.Electrodes;
-            Actuators = boardModel.Actuators;
-            Bubbles = boardModel.Bubbles;
+            BoardModel = boardModel;
         }
 
         public async void MainLoop()
@@ -30,12 +21,11 @@ namespace DMF_Simulator_Frontend.Models
             IsRunning = true;
             while(IsRunning)
             {
-                if (Droplets != null)
+                if (BoardModel.Droplets != null)
                 {
                     MoveObjects();
                     FinishAnimation();
                 }
-
                 ManageElectrodes();
 
                 MainLoopCompleted?.Invoke(this, EventArgs.Empty);
@@ -45,20 +35,20 @@ namespace DMF_Simulator_Frontend.Models
 
         private void ManageElectrodes()
         {
-            if (!Electrodes.Any())
+            if (!BoardModel.Electrodes.Any())
             {
             }
         }
 
         private void MoveObjects()
         {
-            if (Droplets.First().PositionY < 60 - Droplets.First().SizeY)
-                Droplets.First().MoveDown(_speed);
+            if (BoardModel.Droplets.First().PositionY < 60 - BoardModel.Droplets.First().SizeY)
+                BoardModel.Droplets.First().MoveDown(_speed);
         }
 
         private void FinishAnimation()
         {
-            if (Droplets.First().PositionY >= 60 - Droplets.First().SizeY)
+            if (BoardModel.Droplets.First().PositionY >= 60 - BoardModel.Droplets.First().SizeY)
                 EndSimulator();
         }
 
@@ -66,7 +56,6 @@ namespace DMF_Simulator_Frontend.Models
         {
             if (!IsRunning)
             {
-                //Droplets = 
                 MainLoop();
             }
         }

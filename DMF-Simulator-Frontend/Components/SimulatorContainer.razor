@@ -1,31 +1,31 @@
-﻿<div class="simulator-container" width="80" height="60" @onclick="@_simulatorManager.StartSimulator">
-    @if (_simulatorManager.Droplets != null)
+﻿<div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" @onclick="@_simulatorManager.StartSimulator">
+    @if (_simulatorManager.BoardModel.Droplets != null)
     {
-        @foreach (var droplet in _simulatorManager.Droplets)
+        @foreach (var droplet in _simulatorManager.BoardModel.Droplets)
         {
             <Droplet Model="droplet" />
         }
     }
 
-    @if (_simulatorManager.Electrodes != null)
+    @if (_simulatorManager.BoardModel.Electrodes != null)
     {
-        @foreach (var electrode in _simulatorManager.Electrodes)
+        @foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
         {
             <Electrode Model="electrode" />
         }
     }
 
-    @if (_simulatorManager.Actuators != null)
+    @if (_simulatorManager.BoardModel.Actuators != null)
     {
-        @foreach (var actuator in _simulatorManager.Actuators)
+        @foreach (var actuator in _simulatorManager.BoardModel.Actuators)
         {
             <Actuator Model="actuator" />
         }
     }
 
-    @if (_simulatorManager.Bubbles != null)
+    @if (_simulatorManager.BoardModel.Bubbles != null)
     {
-        @foreach (var bubble in _simulatorManager.Bubbles)
+        @foreach (var bubble in _simulatorManager.BoardModel.Bubbles)
         {
             <Bubble Model="bubble" />
         }
@@ -35,13 +35,11 @@
 @code {
     public SimulatorManager _simulatorManager;
     [Parameter]
-    public BoardModel boardModel { get; set; }
-    //private string _simulatorCss => $"width: {_simulatorManager.InformationList.First().SizeX}px; height: {_simulatorManager.InformationList.First().SizeY}px";
+    public BoardModel BoardModel { get; set; }
 
     protected override void OnInitialized()
     {
-        //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
-        _simulatorManager = new(boardModel);
+        _simulatorManager = new(BoardModel);
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
     }
 }
