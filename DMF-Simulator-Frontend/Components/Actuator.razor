@@ -1,4 +1,4 @@
-﻿<div class="actuator-container" style="@_actuatorCss">
+﻿<div class="actuator-container" style="@_divCss">
     <svg>
         @if (@Model.Type == "heater")
         {
@@ -10,7 +10,7 @@
 @code {
     [Parameter] public ActuatorModel Model { get; set; }
 
-    private string _actuatorCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
+    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
     private string _shapeCss => $"fill-opacity: 0; stroke-width: {_strokeWidth}; stroke: {_stroke}";
 
     private int _strokeWidth = 2;

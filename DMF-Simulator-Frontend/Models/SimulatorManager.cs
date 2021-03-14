@@ -42,14 +42,18 @@ namespace DMF_Simulator_Frontend.Models
 
         private void MoveObjects()
         {
-            if (BoardModel.Droplets.First().PositionY < 60 - BoardModel.Droplets.First().SizeY)
+            if (BoardModel.Droplets.First().PositionY < BoardModel.Information.FirstOrDefault().SizeY - BoardModel.Droplets.First().SizeY)
+            {
                 BoardModel.Droplets.First().MoveDown(_speed);
+            }
         }
 
         private void FinishAnimation()
         {
-            if (BoardModel.Droplets.First().PositionY >= 60 - BoardModel.Droplets.First().SizeY)
+            if (BoardModel.Droplets.First().PositionY >= BoardModel.Information.FirstOrDefault().SizeY - BoardModel.Droplets.First().SizeY)
+            {
                 EndSimulator();
+            }
         }
 
         public void StartSimulator()
