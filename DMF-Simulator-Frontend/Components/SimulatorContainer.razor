@@ -1,12 +1,4 @@
 ﻿<div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" @onclick="@_simulatorManager.StartSimulator">
-    @if (_simulatorManager.BoardModel.Droplets != null)
-    {
-        @foreach (var droplet in _simulatorManager.BoardModel.Droplets)
-        {
-            <Droplet Model="droplet" />
-        }
-    }
-
     @if (_simulatorManager.BoardModel.Electrodes != null)
     {
         @foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
@@ -20,6 +12,22 @@
         @foreach (var actuator in _simulatorManager.BoardModel.Actuators)
         {
             <Actuator Model="actuator" />
+        }
+    }
+
+    @if (_simulatorManager.BoardModel.Sensors != null)
+    {
+        @foreach (var sensor in _simulatorManager.BoardModel.Sensors)
+        {
+            <Sensor Model="sensor" />
+        }
+    }
+
+    @if (_simulatorManager.BoardModel.Droplets != null)
+    {
+        @foreach (var droplet in _simulatorManager.BoardModel.Droplets)
+        {
+            <Droplet Model="droplet" />
         }
     }
 

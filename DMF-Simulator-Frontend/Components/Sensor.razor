@@ -1,0 +1,16 @@
+﻿<div class="sensor-container" style="@_divCss">
+    <svg>
+        <rect class="sensor" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" />
+    </svg>
+</div>
+
+@code {
+    [Parameter]
+    public SensorModel Model { get; set; }
+
+    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
+    private string _shapeCss => $"fill-opacity: 0; stroke-width: {_strokeWidth}; stroke: {_stroke}";
+
+    private double _strokeWidth = 1.5;
+    private string _stroke = "green";
+}

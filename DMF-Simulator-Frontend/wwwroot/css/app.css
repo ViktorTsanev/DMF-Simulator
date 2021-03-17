@@ -57,12 +57,17 @@ a, .btn-link {
     position: absolute;
 }
 
-.droplet-container {
+.actuator-container {
     position: absolute;
     z-index: 1;
 }
 
-.actuator-container {
+.sensor-container {
+    position: absolute;
+    z-index: 1;
+}
+
+.droplet-container {
     position: absolute;
     z-index: 1;
 }

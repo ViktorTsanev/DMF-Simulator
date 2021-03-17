@@ -1,4 +1,7 @@
-﻿<!--<Tooltip Text="@Model.ID.ToString()">-->
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!--<Tooltip Text="@Model.ID.ToString()">-->
 <div class="electrode-container" style="@_divCss">
     <svg>
         @if (@Model.Shape == 0)
@@ -23,8 +26,5 @@
     public ElectrodeModel Model { get; set; }
 
     private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
-    private string _shapeCss => $"fill: {(Model.Status == 0 ? "yellow" : "red")}; stroke-width: {_strokeWidth}; stroke: {_stroke}";
-
-    private int _strokeWidth = 1;
-    private string _stroke = "black";
+    private string _shapeCss => $"fill: {(Model.Status == 0 ? @Configuration["electrodeOffColor"] : @Configuration["electrodeOnColor"])}; stroke-width: {@Configuration["electrodeStrokeWidth"]}; stroke: {@Configuration["electrodeStrokeColor"]}";
 }
