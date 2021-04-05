@@ -10,9 +10,7 @@
         public int SizeY { get; set; }
         public string Color { get; set; }
         public float Temperature { get; set; }
-        public void MoveDown(int speed)
-        {
-            PositionY += speed;
-        }
+        public int TranslateX { get; set; }
+        public int TranslateY { get; set; }
     }
 }

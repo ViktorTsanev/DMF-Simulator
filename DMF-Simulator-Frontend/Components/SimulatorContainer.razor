@@ -44,10 +44,12 @@
     public SimulatorManager _simulatorManager;
     [Parameter]
     public BoardModel BoardModel { get; set; }
+    [Parameter]
+    public BoardModel BoardModelNew { get; set; }
 
     protected override void OnInitialized()
     {
-        _simulatorManager = new(BoardModel);
+        _simulatorManager = new(BoardModel, BoardModelNew);
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
     }
 }

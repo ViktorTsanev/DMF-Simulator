@@ -7,16 +7,20 @@
 }
 else
 {
-    <SimulatorContainer boardModel="@boardModel" />
+    <SimulatorContainer boardModel="@boardModel" BoardModelNew="@boardModelNew" />
 }
 
 @code {
     BoardModel boardModel;
+    BoardModel boardModelNew;
 
     protected override async Task OnInitializedAsync()
     {
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10.json");
-        boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
+        //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
+        //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/100x100.json");
+        boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
+        boardModelNew = await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json");
     }
 }
