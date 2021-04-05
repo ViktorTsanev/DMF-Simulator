@@ -38,33 +38,6 @@ namespace DMF_Simulator_Frontend.Models
             BoardModel.Droplets.LastOrDefault().TranslateY = r.Next(-100, 100);
         }
 
-        /*private void MoveObjects(DropletModel oldD, DropletModel newD)
-        {
-            //BoardModel initialBoard, BoardModel newBoard
-            IEnumerable<string> changedDroplets = newBoard.Droplets.Select(d => d.Name).Intersect(initialBoard.Droplets.Select(d => d.Name);
-            foreach(DropletModel droplet in initialBoard.Droplets.Where(d => d.Name == newBoard.Droplets.ForEach(d => d.Name)))
-            {
-
-            }
-
-            
-            oldD.MoveX(_speed);
-
-
-            if (BoardModel.Droplets.First().PositionY < BoardModel.Information.FirstOrDefault().SizeY - BoardModel.Droplets.First().SizeY)
-            {
-                BoardModel.Droplets.First().MoveDown(_speed);
-            }
-        }*/
-
-        private void FinishAnimation()
-        {
-            if (BoardModel.Droplets.First().PositionY >= BoardModel.Information.FirstOrDefault().SizeY - BoardModel.Droplets.First().SizeY)
-            {
-                EndSimulator();
-            }
-        }
-
         public void StartSimulator()
         {
             ProcessChanges();
