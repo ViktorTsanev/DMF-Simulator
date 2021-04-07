@@ -1,4 +1,4 @@
-﻿<div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" @onclick="@_simulatorManager.StartSimulator">
+﻿<div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onclick="@_simulatorManager.StartSimulatorAsync">
     @if (_simulatorManager.BoardModel.Electrodes != null)
     {
         @foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
@@ -45,11 +45,19 @@
     [Parameter]
     public BoardModel BoardModel { get; set; }
     [Parameter]
-    public BoardModel BoardModelNew { get; set; }
+    public List<BoardModel> BoardModelNew { get; set; }
+
+    private string _divCss => $"transition: transform 1s; transform: scale({_scale});";
+    private double _scale = 1;
 
     protected override void OnInitialized()
     {
         _simulatorManager = new(BoardModel, BoardModelNew);
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        //_scale *= 1.5;
     }
 }

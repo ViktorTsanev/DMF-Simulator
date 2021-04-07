@@ -12,5 +12,7 @@
         public float Temperature { get; set; }
         public int TranslateX { get; set; }
         public int TranslateY { get; set; }
+        public double ScaleX { get; set; } = 1;
+        public double ScaleY { get; set; } = 1;
     }
 }

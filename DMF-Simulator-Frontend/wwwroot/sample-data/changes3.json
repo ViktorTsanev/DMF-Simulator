@@ -1,0 +1,27 @@
+{
+  "droplets": [
+    {
+      "name": "drop1",
+      "ID": "001",
+      "substance_name": "coffee",
+      "positionX": "65",
+      "positionY": "25",
+      "sizeX": "15",
+      "sizeY": "15",
+      "color": "#6f4e37",
+      "temperature": "82"
+    },
+
+    {
+      "name": "drop2",
+      "ID": "002",
+      "substance_name": "water",
+      "positionX": "25",
+      "positionY": "25",
+      "sizeX": "20",
+      "sizeY": "10",
+      "color": "#00FFFF",
+      "temperature": "20"
+    }
+  ]
+}
