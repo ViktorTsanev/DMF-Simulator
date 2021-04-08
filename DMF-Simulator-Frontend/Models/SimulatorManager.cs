@@ -34,14 +34,16 @@ namespace DMF_Simulator_Frontend.Models
             {
                 BoardModel.Droplets.ForEach(delegate (DropletModel d)
                 {
-                    d.TranslateX += b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault().PositionX - d.PositionX - d.TranslateX;
+                    DropletModel newDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
+                    d.TranslateX += newDroplet.PositionX - d.PositionX - d.TranslateX;
                     Console.WriteLine("TrX {0} ID {1}", d.TranslateX, d.ID);
-                    d.TranslateY += b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault().PositionY - d.PositionY - d.TranslateY;
+                    d.TranslateY += newDroplet.PositionY - d.PositionY - d.TranslateY;
                     Console.WriteLine("TrY {0} ID {1}", d.TranslateY, d.ID);
-                    d.ScaleX = (double)b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault().SizeX / d.SizeX;
+                    d.ScaleX = (double)newDroplet.SizeX / d.SizeX;
                     Console.WriteLine("ScaleX {0} ID {1}", d.ScaleX, d.ID);
-                    d.ScaleY = (double)b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault().SizeY / d.SizeY;
+                    d.ScaleY = (double)newDroplet.SizeY / d.SizeY;
                     Console.WriteLine("ScaleY {0} ID {1}", d.ScaleY, d.ID);
+                    d.Color = newDroplet.Color;
                 });
                 MainLoopCompleted?.Invoke(this, EventArgs.Empty);
                 await Task.Delay(1000);
