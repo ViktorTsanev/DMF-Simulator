@@ -1,4 +1,9 @@
 ﻿<MatSlider TValue="double" ValueMin="0" ValueMax="5" @bind-Value="@_scale" Immediate="false"></MatSlider>
+<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Actuators)" Label="Actuators" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Actuators))"></MatSlideToggle>
+<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Bubbles)" Label="Bubbles" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Bubbles))"></MatSlideToggle>
+<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Droplets)" Label="Droplets" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Droplets))"></MatSlideToggle>
+<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Electrodes)" Label="Electrodes" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Electrodes))"></MatSlideToggle>
+<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Sensors)" Label="Sensors" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Sensors))"></MatSlideToggle>
 
 <div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onclick="@_simulatorManager.StartSimulatorAsync">
     @if (_simulatorManager.BoardModel.Electrodes != null)
@@ -44,8 +49,10 @@
 
 @code {
     public SimulatorManager _simulatorManager;
+
     [Parameter]
     public BoardModel BoardModel { get; set; }
+
     [Parameter]
     public List<BoardModel> BoardModelNew { get; set; }
 
@@ -56,5 +63,18 @@
     {
         _simulatorManager = new(BoardModel, BoardModelNew);
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
+    }
+
+    private void Toggle<T>(bool toggled, IList<T> elements) where T : ElementModel
+    {
+        foreach (ElementModel element in elements)
+        {
+            element.Visible = toggled;
+        }
+    }
+
+    private bool IsVisible<T>(IList<T> elements) where T : ElementModel
+    {
+        return elements.Any(e => e.Visible);
     }
 }

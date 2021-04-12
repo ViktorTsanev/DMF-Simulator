@@ -10,7 +10,7 @@
 @code {
     [Parameter] public DropletModel Model { get; set; }
 
-    private string _divCss => $"width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {@_visibility}; transition: transform 1s; transform: translate({Model.TranslateX}px, {Model.TranslateY}px);";
+    private string _divCss => $"width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform 1s; transform: translate({Model.TranslateX}px, {Model.TranslateY}px);";
     private string _shapeCss => $"fill: {Model.Color}; stroke-width: {@Configuration["dropletStrokeWidth"]}; stroke: {@Configuration["dropletStrokeColor"]}; transition: transform 1s; transform: translate({(1 - Model.ScaleX) * _xCenter}px, {(1 - Model.ScaleY) * _yCenter}px) scale({Model.ScaleX}, {Model.ScaleY});";
 
     private double _xRadius => Model.SizeX / 2;
@@ -18,6 +18,4 @@
 
     private double _xCenter => Model.PositionX + _xRadius;
     private double _yCenter => Model.PositionY + _yRadius;
-
-    private string _visibility = "visible";
 }

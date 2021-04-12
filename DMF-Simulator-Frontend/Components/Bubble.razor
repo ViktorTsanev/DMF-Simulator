@@ -7,8 +7,8 @@
 @code {
     [Parameter] public BubbleModel Model { get; set; }
 
-    private string _divCss => $"width: {Model.SizeX}px; height: {Model.SizeY}";
-    private string _shapeCss => $"fill-opacity: 0; stroke-width:{_strokeWidth}; stroke:{_stroke}";
+    private string _divCss => $"width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")};";
+    private string _shapeCss => $"fill-opacity: 0; stroke-width:{_strokeWidth}; stroke:{_stroke};";
 
     private double _xRadius => Model.SizeX / 2;
     private double _yRadius => Model.SizeY / 2;

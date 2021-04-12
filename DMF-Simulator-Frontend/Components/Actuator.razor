@@ -10,8 +10,8 @@
 @code {
     [Parameter] public ActuatorModel Model { get; set; }
 
-    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
-    private string _shapeCss => $"fill-opacity: 0; stroke-width: {_strokeWidth}; stroke: {_stroke}";
+    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")};";
+    private string _shapeCss => $"fill-opacity: 0; stroke-width: {_strokeWidth}; stroke: {_stroke};";
 
     private double _strokeWidth = 2;
     private string _stroke = "red";

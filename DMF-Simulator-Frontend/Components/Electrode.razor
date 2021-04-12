@@ -25,6 +25,6 @@
     [Parameter]
     public ElectrodeModel Model { get; set; }
 
-    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}";
-    private string _shapeCss => $"fill: {(Model.Status == 0 ? @Configuration["electrodeOffColor"] : @Configuration["electrodeOnColor"])}; stroke-width: {@Configuration["electrodeStrokeWidth"]}; stroke: {@Configuration["electrodeStrokeColor"]}";
+    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")};";
+    private string _shapeCss => $"fill: {(Model.Status == 0 ? @Configuration["electrodeOffColor"] : @Configuration["electrodeOnColor"])}; stroke-width: {@Configuration["electrodeStrokeWidth"]}; stroke: {@Configuration["electrodeStrokeColor"]};";
 }
