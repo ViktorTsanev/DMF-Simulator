@@ -1,4 +1,6 @@
-﻿<div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onclick="@_simulatorManager.StartSimulatorAsync">
+﻿<MatSlider TValue="double" ValueMin="0" ValueMax="5" @bind-Value="@_scale" Immediate="false"></MatSlider>
+
+<div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onclick="@_simulatorManager.StartSimulatorAsync">
     @if (_simulatorManager.BoardModel.Electrodes != null)
     {
         @foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
@@ -54,10 +56,5 @@
     {
         _simulatorManager = new(BoardModel, BoardModelNew);
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        //_scale *= 1.5;
     }
 }

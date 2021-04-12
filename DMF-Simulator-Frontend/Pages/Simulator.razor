@@ -21,6 +21,7 @@ else
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/100x100.json");
         boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
+        //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20_mini.json");
         boardModelNew = new();
         boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
         boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));
