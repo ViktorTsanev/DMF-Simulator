@@ -1,11 +1,7 @@
 ﻿namespace DMF_Simulator_Frontend.Models
 {
-    public class ElementModel
+    public abstract class ElementModel : BaseElementModel
     {
-        public string Name { get; set; }
-        public int ID { get; set; }
-        public int PositionX { get; set; }
-        public int PositionY { get; set; }
         public int SizeX { get; set; }
         public int SizeY { get; set; }
         public int TranslateX { get; set; }
