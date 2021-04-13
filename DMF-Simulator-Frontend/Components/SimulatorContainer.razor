@@ -65,6 +65,14 @@
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
     }
 
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+        //if (_simulatorManager.BoardModelNew != null)
+        //{
+        //    await _simulatorManager.StartSimulatorAsync();
+      //  }
+    //}
+
     private void Toggle<T>(bool toggled, IList<T> elements) where T : ElementModel
     {
         foreach (ElementModel element in elements)

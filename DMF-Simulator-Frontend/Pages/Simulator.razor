@@ -1,5 +1,7 @@
 ﻿@page "/simulator"
 @inject HttpClient Http
+@using System.IO
+@using Newtonsoft.Json
 
 @if (boardModel == null)
 {
@@ -7,6 +9,7 @@
 }
 else
 {
+    <MatFileUpload OnChange="@MultipleFilesReady" AllowMultiple="true" Label="Drop files here or Browse"></MatFileUpload>
     <SimulatorContainer BoardModel="@boardModel" BoardModelNew="@boardModelNew" />
 }
 
@@ -23,8 +26,28 @@ else
         boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20_mini.json");
         boardModelNew = new();
-        boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
-        boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));
-        boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes3.json"));
+        //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
+        //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));
+        //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes3.json"));
+    }
+
+    private async Task MultipleFilesReady(IMatFileUploadEntry[] files)
+    {
+        try
+        {
+            foreach (var file in files)
+            {
+                using MemoryStream memoryStream = new();
+                await file.WriteToStreamAsync(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                using StreamReader reader = new(memoryStream);
+                string fileContent = await reader.ReadToEndAsync();
+                boardModelNew.Add(JsonConvert.DeserializeObject<BoardModel>(fileContent));
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 }
