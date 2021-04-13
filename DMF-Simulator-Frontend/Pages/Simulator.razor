@@ -1,5 +1,6 @@
 ﻿@page "/simulator"
 @inject HttpClient Http
+@inject IMatToaster Toaster
 @using System.IO
 @using Newtonsoft.Json
 
@@ -44,10 +45,12 @@ else
                 string fileContent = await reader.ReadToEndAsync();
                 boardModelNew.Add(JsonConvert.DeserializeObject<BoardModel>(fileContent));
             }
+            Toaster.Add("Successfully Uploaded Files", MatToastType.Success, "Success", "");
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
+            Toaster.Add("Error Upoading Files", MatToastType.Danger, "Error", "");
         }
     }
 }
