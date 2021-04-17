@@ -24,8 +24,9 @@ else
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/100x100.json");
-        boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
+        //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20_mini.json");
+        boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/0.json");
         boardModelNew = new();
         //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
         //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));
@@ -44,8 +45,17 @@ else
                 using StreamReader reader = new(memoryStream);
                 string fileContent = await reader.ReadToEndAsync();
                 boardModelNew.Add(JsonConvert.DeserializeObject<BoardModel>(fileContent));
+
+                //if (file.Name == "0")
+                //{
+                //    boardModel = JsonConvert.DeserializeObject<BoardModel>(fileContent);
+                //}
+                //else
+                //{
+                //}
             }
             Toaster.Add("Successfully Uploaded Files", MatToastType.Success, "Success", "");
+            //StateHasChanged();
         }
         catch (Exception e)
         {
