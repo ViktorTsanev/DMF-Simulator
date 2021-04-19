@@ -1,9 +1,24 @@
-﻿<MatSlider TValue="double" ValueMin="0" ValueMax="5" @bind-Value="@_scale" Immediate="false"></MatSlider>
-<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Actuators)" Label="Actuators" Disabled="@(BoardModel.Actuators == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Actuators))"></MatSlideToggle>
-<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Bubbles)" Label="Bubbles" Disabled="@(BoardModel.Bubbles == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Bubbles))"></MatSlideToggle>
-<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Droplets)" Label="Droplets" Disabled="@(BoardModel.Droplets == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Droplets))"></MatSlideToggle>
-<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Electrodes)" Label="Electrodes" Disabled="@(BoardModel.Electrodes == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Electrodes))"></MatSlideToggle>
-<MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Sensors)" Label="Sensors" Disabled="@(BoardModel.Sensors == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Sensors))"></MatSlideToggle>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<MatAccordion LazyRendering="true">
+    <MatExpansionPanel @bind-Expanded="@_panelOpenState">
+        <MatExpansionPanelSummary>
+            <MatExpansionPanelHeader>Customization</MatExpansionPanelHeader>
+            <MatExpansionPanelSubHeader>
+                Click to @(_panelOpenState ? "close" : "open")
+            </MatExpansionPanelSubHeader>
+        </MatExpansionPanelSummary>
+        <MatExpansionPanelDetails>
+            <MatSlider TValue="double" ValueMin="@_sliderMinValue" ValueMax="@_sliderMaxValue" @bind-Value="@_scale" Immediate="true" Label="Board Size"></MatSlider>
+            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Actuators)" Label="Actuators" Disabled="@(BoardModel.Actuators == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Actuators))"></MatSlideToggle>
+            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Bubbles)" Label="Bubbles" Disabled="@(BoardModel.Bubbles == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Bubbles))"></MatSlideToggle>
+            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Droplets)" Label="Droplets" Disabled="@(BoardModel.Droplets == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Droplets))"></MatSlideToggle>
+            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Electrodes)" Label="Electrodes" Disabled="@(BoardModel.Electrodes == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Electrodes))"></MatSlideToggle>
+            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Sensors)" Label="Sensors" Disabled="@(BoardModel.Sensors == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Sensors))"></MatSlideToggle>
+        </MatExpansionPanelDetails>
+    </MatExpansionPanel>
+</MatAccordion>
 
 <div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onclick="@_simulatorManager.StartSimulatorAsync">
     @if (_simulatorManager.BoardModel.Electrodes != null)
@@ -57,10 +72,28 @@
     public List<BoardModel> BoardModelNew { get; set; }
 
     private string _divCss => $"transition: transform 1s; transform: scale({_scale});";
-    private double _scale = 1;
+    private double _scale;
+    private double _sliderMinValue;
+    private double _sliderMaxValue;
+    private bool _panelOpenState;
 
     protected override void OnInitialized()
     {
+        if (!double.TryParse(Configuration["sliderMinValue"], out _sliderMinValue))
+        {
+            _sliderMinValue = 0;
+        }
+
+        if (!double.TryParse(Configuration["sliderMaxValue"], out _sliderMaxValue))
+        {
+            _sliderMaxValue = 5;
+        }
+
+        if (!double.TryParse(Configuration["defaultBoardScaleFactor"], out _scale))
+        {
+            _scale = 1;
+        }
+
         _simulatorManager = new(BoardModel, BoardModelNew);
         _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
     }
