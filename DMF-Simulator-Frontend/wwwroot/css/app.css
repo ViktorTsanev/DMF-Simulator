@@ -64,14 +64,22 @@ a, .btn-link {
     position: absolute;
 }
 
-.actuator-container {
+.actuator-div {
     position: absolute;
     z-index: 1;
 }
 
-.sensor-container {
+.actuator-svg {
+    position: absolute;
+}
+
+.sensor-div {
     position: absolute;
     z-index: 1;
+}
+
+.sensor-svg {
+    position: absolute;
 }
 
 .droplet-div {

@@ -1,5 +1,7 @@
-﻿<div class="sensor-container" style="@_divCss">
-    <svg>
+﻿@inject IConfiguration Configuration
+
+<div class="sensor-div" width="@Model.SizeX" height="@Model.SizeY" style="@_divCss">
+    <svg class="sensor-svg" width="@Model.SizeX" height="@Model.SizeY">
         <rect class="sensor" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" />
     </svg>
 </div>
@@ -9,8 +11,12 @@
     public SensorModel Model { get; set; }
 
     private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")};";
-    private string _shapeCss => $"fill-opacity: 0; stroke-width: {_strokeWidth}; stroke: {_stroke};";
+    private string _shapeCss => $"fill-opacity: 0; stroke-width: {_strokeWidth}; stroke: {Configuration["sensorStrokeColor"]};";
 
-    private double _strokeWidth = 1;
-    private string _stroke = "blue";
+    private double _strokeWidth;
+
+    protected override void OnInitialized()
+    {
+        double.TryParse(Configuration["sensorStrokeWidth"], out _strokeWidth);
+    }
 }
