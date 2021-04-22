@@ -1,21 +1,34 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
-<div class="droplet-container" style="@_divCss">
-    <svg>
-        <ellipse class="droplet" cx="@_xCenter" cy="@_yCenter" rx="@_xRadius" ry="@_yRadius" style="@_shapeCss" />
+<div class="droplet-div" width="@_containerWidth" height="@_containerHeight" style="@_divCss">
+    <svg class="droplet-svg" width="@_containerWidth" height="@_containerHeight">
+        <ellipse class="droplet" cx="@_xCenter" cy="@_yCenter" rx="@_xRadius" ry="@_yRadius" style="@_shapeCss" @onmouseover="OnHoverCallback" />
     </svg>
 </div>
 
 @code {
-    [Parameter] public DropletModel Model { get; set; }
+    [Parameter]
+    public DropletModel Model { get; set; }
 
-    private string _divCss => $"width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform 1s; transform: translate({Model.TranslateX}px, {Model.TranslateY}px);";
-    private string _shapeCss => $"fill: {Model.Color}; stroke-width: {@Configuration["dropletStrokeWidth"]}; stroke: {@Configuration["dropletStrokeColor"]}; transition: transform 1s; transform: translate({(1 - Model.ScaleX) * _xCenter}px, {(1 - Model.ScaleY) * _yCenter}px) scale({Model.ScaleX}, {Model.ScaleY});";
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnHoverCallback { get; set; }
+
+    private string _divCss => $"left: {Model.PositionX - _strokeWidth}px; top: {Model.PositionY - _strokeWidth}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform 1s; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
+    private string _shapeCss => $"fill: {Model.Color}; stroke-width: {_strokeWidth}; stroke: {Configuration["dropletStrokeColor"]};";
 
     private double _xRadius => Model.SizeX / 2;
     private double _yRadius => Model.SizeY / 2;
 
-    private double _xCenter => Model.PositionX + _xRadius;
-    private double _yCenter => Model.PositionY + _yRadius;
+    private double _strokeWidth;
+    private double _containerWidth => Model.SizeX + 2 * _strokeWidth;
+    private double _containerHeight => Model.SizeY + 2 * _strokeWidth;
+
+    private double _xCenter => _xRadius + _strokeWidth;
+    private double _yCenter => _yRadius + _strokeWidth;
+
+    protected override void OnInitialized()
+    {
+        double.TryParse(Configuration["dropletStrokeWidth"], out _strokeWidth);
+    }
 }

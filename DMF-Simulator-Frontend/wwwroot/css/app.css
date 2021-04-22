@@ -51,9 +51,16 @@ a, .btn-link {
 
 .simulator-container {
     position: absolute;
+    background-color: black;
 }
 
-.electrode-container {
+.electrode-div {
+    position: absolute;
+    z-index: 0;
+    /*background-color: black;*/
+}
+
+.electrode-svg {
     position: absolute;
 }
 
@@ -67,9 +74,13 @@ a, .btn-link {
     z-index: 1;
 }
 
-.droplet-container {
+.droplet-div {
     position: absolute;
     z-index: 1;
+}
+
+.droplet-svg {
+    position: absolute;
 }
 
 .bubble-container {

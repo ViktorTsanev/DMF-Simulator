@@ -1,11 +1,11 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
-<div class="electrode-container" style="@_divCss">
-    <svg>
+<div class="electrode-div" width="@_containerWidth" height="@_containerHeight" style="@_divCss">
+    <svg class="electrode-svg" width="@_containerWidth" height="@_containerHeight">
         @if (@Model.Shape == 0)
         {
-            <rect class="electrode" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" />
+            <rect class="electrode" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" @onmouseover="OnHoverCallback" />
         }
         else if (@Model.Shape == 1)
         {
@@ -23,6 +23,18 @@
     [Parameter]
     public ElectrodeModel Model { get; set; }
 
-    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")};";
-    private string _shapeCss => $"fill: {(Model.Status == 0 ? @Configuration["electrodeOffColor"] : @Configuration["electrodeOnColor"])}; stroke-width: {@Configuration["electrodeStrokeWidth"]}; stroke: {@Configuration["electrodeStrokeColor"]};";
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnHoverCallback { get; set; }
+
+    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; visibility: {(Model.Visible ? "visible" : "hidden")};";
+    private string _shapeCss => $"fill: {(Model.Status == 0 ? Configuration["electrodeOffColor"] : Configuration["electrodeOnColor"])}; stroke-width: {_strokeWidth}; stroke: {Configuration["electrodeStrokeColor"]};";
+
+    private double _strokeWidth;
+    private double _containerWidth => Model.SizeX + 2 * _strokeWidth;
+    private double _containerHeight => Model.SizeY + 2 * _strokeWidth;
+
+    protected override void OnInitialized()
+    {
+        double.TryParse(Configuration["electrodeStrokeWidth"], out _strokeWidth);
+    }
 }
