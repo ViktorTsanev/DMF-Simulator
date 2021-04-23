@@ -1,21 +1,33 @@
-﻿<div class="bubble-container" style="@_divCss">
-    <svg>
-        <ellipse class="bubble" cx="@_xCenter" cy="@_yCenter" rx="@_xRadius" ry="@_yRadius" style="@_shapeCss" />
+﻿@inject IConfiguration Configuration
+
+<div class="bubble-div" width="@_containerWidth" height="@_containerHeight" style="@_divCss">
+    <svg class="bubble-svg" width="@_containerWidth" height="@_containerHeight">
+        <ellipse class="bubble" cx="@_xCenter" cy="@_yCenter" rx="@_xRadius" ry="@_yRadius" style="@_shapeCss" @onmouseover="OnHoverCallback" />
     </svg>
 </div>
 
 @code {
-    [Parameter] public BubbleModel Model { get; set; }
+    [Parameter]
+    public BubbleModel Model { get; set; }
 
-    private string _divCss => $"width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")};";
-    private string _shapeCss => $"fill-opacity: 0; stroke-width:{_strokeWidth}; stroke:{_stroke};";
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnHoverCallback { get; set; }
+
+    private string _divCss => $"left: {Model.PositionX - _strokeWidth}px; top: {Model.PositionY - _strokeWidth}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform 1s; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
+    private string _shapeCss => $"fill-opacity: 0; stroke-width:{_strokeWidth}; stroke:{Configuration["bubbleStrokeColor"]};";
 
     private double _xRadius => Model.SizeX / 2;
     private double _yRadius => Model.SizeY / 2;
 
-    private double _xCenter => Model.PositionX + _xRadius;
-    private double _yCenter => Model.PositionY + _yRadius;
+    private double _strokeWidth;
+    private double _containerWidth => Model.SizeX + 2 * _strokeWidth;
+    private double _containerHeight => Model.SizeY + 2 * _strokeWidth;
 
-    private double _strokeWidth = 0.5;
-    private string _stroke = "black";
+    private double _xCenter => _xRadius + _strokeWidth;
+    private double _yCenter => _yRadius + _strokeWidth;
+
+    protected override void OnInitialized()
+    {
+        double.TryParse(Configuration["bubbleStrokeWidth"], out _strokeWidth);
+    }
 }

@@ -2,13 +2,16 @@
 
 <div class="sensor-div" width="@Model.SizeX" height="@Model.SizeY" style="@_divCss">
     <svg class="sensor-svg" width="@Model.SizeX" height="@Model.SizeY">
-        <rect class="sensor" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" />
+        <rect class="sensor" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" @onmouseover="OnHoverCallback" />
     </svg>
 </div>
 
 @code {
     [Parameter]
     public SensorModel Model { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnHoverCallback { get; set; }
 
     private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; width: {Model.SizeX}px; height: {Model.SizeY}; visibility: {(Model.Visible ? "visible" : "hidden")};";
     private string _shapeCss => $"fill-opacity: 0; stroke-width: {_strokeWidth}; stroke: {Configuration["sensorStrokeColor"]};";

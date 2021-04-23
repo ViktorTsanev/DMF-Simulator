@@ -91,7 +91,11 @@ a, .btn-link {
     position: absolute;
 }
 
-.bubble-container {
+.bubble-div {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
+}
+
+.bubble-svg {
+    position: absolute;
 }
