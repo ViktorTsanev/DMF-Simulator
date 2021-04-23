@@ -28,43 +28,49 @@ namespace DMF_Simulator_Frontend.Models
             }
         }
 
+        private void IndividualChanges<T>(T oldElement, T newElement) where T : ElementModel
+        {
+            oldElement.TranslateX += newElement.PositionX - oldElement.PositionX - oldElement.TranslateX;
+            Console.WriteLine("TrX {0} ID {1}", oldElement.TranslateX, oldElement.ID);
+            oldElement.TranslateY += newElement.PositionY - oldElement.PositionY - oldElement.TranslateY;
+            Console.WriteLine("TrY {0} ID {1}", oldElement.TranslateY, oldElement.ID);
+            oldElement.ScaleX = (double)newElement.SizeX / oldElement.SizeX;
+            Console.WriteLine("ScaleX {0} ID {1}", oldElement.ScaleX, oldElement.ID);
+            oldElement.ScaleY = (double)newElement.SizeY / oldElement.SizeY;
+            Console.WriteLine("ScaleY {0} ID {1}", oldElement.ScaleY, oldElement.ID);
+        }
+
         private async Task ProcessChangesAsync()
         {
             foreach (BoardModel b in BoardModelNew)
             {
                 BoardModel.Electrodes.ForEach(delegate (ElectrodeModel e)
                 {
-                    ElectrodeModel newElectrode = b.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
-                    if (newElectrode != null)
+                    if (b.Electrodes != null)
                     {
-                        e.TranslateX += newElectrode.PositionX - e.PositionX - e.TranslateX;
-                        Console.WriteLine("TrX {0} ID {1}", e.TranslateX, e.ID);
-                        e.TranslateY += newElectrode.PositionY - e.PositionY - e.TranslateY;
-                        Console.WriteLine("TrY {0} ID {1}", e.TranslateY, e.ID);
-                        e.ScaleX = (double)newElectrode.SizeX / e.SizeX;
-                        Console.WriteLine("ScaleX {0} ID {1}", e.ScaleX, e.ID);
-                        e.ScaleY = (double)newElectrode.SizeY / e.SizeY;
-                        Console.WriteLine("ScaleY {0} ID {1}", e.ScaleY, e.ID);
-                        e.Status = newElectrode.Status;
+                        ElectrodeModel newElectrode = b.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
+                        if (newElectrode != null)
+                        {
+                            IndividualChanges(e, newElectrode);
+                            e.Status = newElectrode.Status;
+                        }
                     }
                 });
+
                 BoardModel.Droplets.ForEach(delegate (DropletModel d)
                 {
-                    DropletModel newDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
-                    if (newDroplet != null)
+                    if (b.Droplets != null)
                     {
-                        d.TranslateX += newDroplet.PositionX - d.PositionX - d.TranslateX;
-                        Console.WriteLine("TrX {0} ID {1}", d.TranslateX, d.ID);
-                        d.TranslateY += newDroplet.PositionY - d.PositionY - d.TranslateY;
-                        Console.WriteLine("TrY {0} ID {1}", d.TranslateY, d.ID);
-                        d.ScaleX = (double)newDroplet.SizeX / d.SizeX;
-                        Console.WriteLine("ScaleX {0} ID {1}", d.ScaleX, d.ID);
-                        d.ScaleY = (double)newDroplet.SizeY / d.SizeY;
-                        Console.WriteLine("ScaleY {0} ID {1}", d.ScaleY, d.ID);
-                        d.Color = newDroplet.Color;
+                        DropletModel newDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
+                        if (newDroplet != null)
+                        {
+                            IndividualChanges(d, newDroplet);
+                            d.SubstanceName = newDroplet.SubstanceName;
+                            d.Temperature = newDroplet.Temperature;
+                        }
                     }
                 });
-                
+
                 MainLoopCompleted?.Invoke(this, EventArgs.Empty);
                 await Task.Delay(1000);
             }
