@@ -1,70 +1,70 @@
 ﻿@inject IConfiguration Configuration
 
-<MatAccordion LazyRendering="true">
-    <MatExpansionPanel @bind-Expanded="@_panelOpenState">
-        <MatExpansionPanelSummary>
-            <MatExpansionPanelHeader>Customization</MatExpansionPanelHeader>
-            <MatExpansionPanelSubHeader>
-                Click to @(_panelOpenState ? "close" : "open")
-            </MatExpansionPanelSubHeader>
-        </MatExpansionPanelSummary>
-        <MatExpansionPanelDetails>
-            <MatSlider TValue="double" ValueMin="@_sliderMinValue" ValueMax="@_sliderMaxValue" @bind-Value="@_scaleFactor" Immediate="true" Label="Scale Factor"></MatSlider>
-            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Actuators)" Label="Actuators" Disabled="@(BoardModel.Actuators == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Actuators))"></MatSlideToggle>
-            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Bubbles)" Label="Bubbles" Disabled="@(BoardModel.Bubbles == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Bubbles))"></MatSlideToggle>
-            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Droplets)" Label="Droplets" Disabled="@(BoardModel.Droplets == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Droplets))"></MatSlideToggle>
-            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Electrodes)" Label="Electrodes" Disabled="@(BoardModel.Electrodes == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Electrodes))"></MatSlideToggle>
-            <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Sensors)" Label="Sensors" Disabled="@(BoardModel.Sensors == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Sensors))"></MatSlideToggle>
-        </MatExpansionPanelDetails>
-    </MatExpansionPanel>
-</MatAccordion>
-
-<div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onclick="@_simulatorManager.StartSimulatorAsync">
-    @if (_simulatorManager.BoardModel.Electrodes != null)
-    {
-        @foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
-        {
-            <Electrode Model="electrode" OnHoverCallback="@(() => ShowMessage(electrode))" />
-        }
-    }
-
-    @if (_simulatorManager.BoardModel.Actuators != null)
-    {
-        @foreach (var actuator in _simulatorManager.BoardModel.Actuators)
-        {
-            <Actuator Model="actuator" OnHoverCallback="@(() => ShowMessage(actuator))" />
-        }
-    }
-
-    @if (_simulatorManager.BoardModel.Sensors != null)
-    {
-        @foreach (var sensor in _simulatorManager.BoardModel.Sensors)
-        {
-            <Sensor Model="sensor" OnHoverCallback="@(() => ShowMessage(sensor))" />
-        }
-    }
-
-    @if (_simulatorManager.BoardModel.Droplets != null)
-    {
-        @foreach (var droplet in _simulatorManager.BoardModel.Droplets)
-        {
-            <Droplet Model="droplet" OnHoverCallback="@(() => ShowMessage(droplet))" />
-        }
-    }
-
-    @if (_simulatorManager.BoardModel.Bubbles != null)
-    {
-        @foreach (var bubble in _simulatorManager.BoardModel.Bubbles)
-        {
-            <Bubble Model="bubble" OnHoverCallback="@(() => ShowMessage(bubble))" />
-        }
-    }
+<div class="mat-layout-grid-cell">
+    <MatSlider TValue="double" ValueMin="@_sliderMinValue" ValueMax="@_sliderMaxValue" @bind-Value="@_scaleFactor" Immediate="true" Label="Scale Factor"></MatSlider>
+    <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Actuators)" Label="Actuators" Disabled="@(BoardModel.Actuators == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Actuators))"></MatSlideToggle>
+    <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Bubbles)" Label="Bubbles" Disabled="@(BoardModel.Bubbles == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Bubbles))"></MatSlideToggle>
+    <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Droplets)" Label="Droplets" Disabled="@(BoardModel.Droplets == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Droplets))"></MatSlideToggle>
+    <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Electrodes)" Label="Electrodes" Disabled="@(BoardModel.Electrodes == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Electrodes))"></MatSlideToggle>
+    <MatSlideToggle TValue="bool" Value="@IsVisible(_simulatorManager.BoardModel.Sensors)" Label="Sensors" Disabled="@(BoardModel.Sensors == null)" ValueChanged="@(e=>Toggle(e, _simulatorManager.BoardModel.Sensors))"></MatSlideToggle>
 </div>
 
-<p>@message</p>
+@if (_element != null)
+{
+    <div class="mat-layout-grid-cell">
+        <CascadingValue Value="@_element">
+            <ElementInfo />
+        </CascadingValue>
+    </div>
+}
+
+<div class="mat-layout-grid-cell">
+    <div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onclick="@_simulatorManager.StartSimulatorAsync">
+        @if (_simulatorManager.BoardModel.Electrodes != null)
+        {
+            @foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
+            {
+                <Electrode Model="electrode" OnHoverCallback="@(() => ShowElementInfo(electrode))" />
+            }
+        }
+
+        @if (_simulatorManager.BoardModel.Actuators != null)
+        {
+            @foreach (var actuator in _simulatorManager.BoardModel.Actuators)
+            {
+                <Actuator Model="actuator" OnHoverCallback="@(() => ShowElementInfo(actuator))" />
+            }
+        }
+
+        @if (_simulatorManager.BoardModel.Sensors != null)
+        {
+            @foreach (var sensor in _simulatorManager.BoardModel.Sensors)
+            {
+                <Sensor Model="sensor" OnHoverCallback="@(() => ShowElementInfo(sensor))" />
+            }
+        }
+
+        @if (_simulatorManager.BoardModel.Droplets != null)
+        {
+            @foreach (var droplet in _simulatorManager.BoardModel.Droplets)
+            {
+                <Droplet Model="droplet" OnHoverCallback="@(() => ShowElementInfo(droplet))" />
+            }
+        }
+
+        @if (_simulatorManager.BoardModel.Bubbles != null)
+        {
+            @foreach (var bubble in _simulatorManager.BoardModel.Bubbles)
+            {
+                <Bubble Model="bubble" OnHoverCallback="@(() => ShowElementInfo(bubble))" />
+            }
+        }
+    </div>
+</div>
 
 @code {
-    public SimulatorManager _simulatorManager;
+    private SimulatorManager _simulatorManager;
+    private BaseElementModel _element;
 
     [Parameter]
     public BoardModel BoardModel { get; set; }
@@ -76,7 +76,6 @@
     private double _scaleFactor;
     private double _sliderMinValue;
     private double _sliderMaxValue;
-    private bool _panelOpenState;
 
     protected override void OnInitialized()
     {
@@ -124,14 +123,8 @@
         return false;
     }
 
-    private string message;
-    private void ShowMessage<T>(T e) where T : BaseElementModel
+    private void ShowElementInfo(BaseElementModel e)
     {
-        message = $"Blaze a new trail with Blazor! ({(e == null ? "" : e.Name)})";
-    }
-
-    private void ShowMessage2(MouseEventArgs args)
-    {
-        message = $"Blaze a new trail with Blazor! ({args.ClientX} : {args.ClientY})";
+        _element = e;
     }
 }

@@ -65,7 +65,7 @@ namespace DMF_Simulator_Frontend.Models
                         if (newDroplet != null)
                         {
                             IndividualChanges(d, newDroplet);
-                            d.SubstanceName = newDroplet.SubstanceName;
+                            d.Substance_Name = newDroplet.Substance_Name;
                             d.Temperature = newDroplet.Temperature;
                         }
                     }

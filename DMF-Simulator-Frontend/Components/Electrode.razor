@@ -13,7 +13,7 @@
             {
                 coords += corner.First() + "," + corner.Last() + " ";
             }
-            <polygon points="@coords" style="@_shapeCss" />
+            <polygon points="@coords" style="@_shapeCss" @onmouseover="OnHoverCallback" />
         }
     </svg>
 </div>

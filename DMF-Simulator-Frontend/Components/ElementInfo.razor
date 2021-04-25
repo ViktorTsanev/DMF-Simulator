@@ -1,0 +1,9 @@
+﻿@foreach (KeyValuePair<string, string> entry in Element.GetElementInfo())
+{
+    <div>@entry.Key: @entry.Value</div>
+}
+
+@code {
+    [CascadingParameter]
+    public BaseElementModel Element { get; set; }
+}
