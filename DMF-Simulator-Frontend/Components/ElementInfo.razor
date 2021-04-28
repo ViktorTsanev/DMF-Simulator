@@ -1,9 +1,16 @@
-﻿@foreach (KeyValuePair<string, string> entry in Element.GetElementInfo())
+﻿@if (Element == null)
 {
-    <div>@entry.Key: @entry.Value</div>
+    <div>Hover over the board to see more information.</div>
+}
+else
+{
+    foreach (KeyValuePair<string, string> entry in Element.GetElementInfo())
+    {
+        <div>@entry.Key: @entry.Value</div>
+    }
 }
 
 @code {
-    [CascadingParameter]
+    [Parameter]
     public BaseElementModel Element { get; set; }
 }

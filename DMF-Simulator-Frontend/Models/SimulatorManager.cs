@@ -78,7 +78,13 @@ namespace DMF_Simulator_Frontend.Models
 
         public async Task StartSimulatorAsync()
         {
-            await ProcessChangesAsync();
+            if (!IsRunning)
+            {
+                IsRunning = true;
+                await ProcessChangesAsync();
+                EndSimulator();
+            }
+
             //MainLoopCompleted?.Invoke(this, EventArgs.Empty);
             /*if (!IsRunning)
             {

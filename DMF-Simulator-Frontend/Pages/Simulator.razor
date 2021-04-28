@@ -10,14 +10,8 @@
 }
 else
 {
-    <div class="mat-layout-grid">
-        <div class="mat-layout-grid-inner">
-            <div class="mat-layout-grid-cell">
-                <MatFileUpload OnChange="@MultipleFilesReady" AllowMultiple="true" Label="Drop files here or Browse"></MatFileUpload>
-            </div>
-            <SimulatorContainer BoardModel="@boardModel" BoardModelNew="@boardModelNew" />
-        </div>
-    </div>
+    <MatFileUpload OnChange="@MultipleFilesReady" AllowMultiple="true" Label="Drop files here or Browse"></MatFileUpload>
+    <SimulatorContainer BoardModel="@boardModel" BoardModelNew="@boardModelNew" />
 }
 
 @code {
