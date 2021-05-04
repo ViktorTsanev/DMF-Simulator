@@ -1,12 +1,12 @@
 ﻿@if (Element == null)
 {
-    <div>Hover over the board to see more information.</div>
+    <div class="info-div">Hover over the board to see more information.</div>
 }
 else
 {
     foreach (KeyValuePair<string, string> entry in Element.GetElementInfo())
     {
-        <div>@entry.Key: @entry.Value</div>
+        <div class="info-div">@entry.Key: @entry.Value</div>
     }
 }
 

@@ -6,12 +6,14 @@
 
 @if (boardModel == null)
 {
-    <MatProgressCircle Indeterminate="true" Size="MatProgressCircleSize.Medium" />
+    <MatFileUpload OnChange="MultipleFilesReady" AllowMultiple="true" Label="Upload files"></MatFileUpload>
+    <!--<MatProgressCircle Indeterminate="true" Size="MatProgressCircleSize.Medium" />-->
 }
 else
 {
-    <MatFileUpload OnChange="@MultipleFilesReady" AllowMultiple="true" Label="Drop files here or Browse"></MatFileUpload>
-    <SimulatorContainer BoardModel="@boardModel" BoardModelNew="@boardModelNew" />
+    <CascadingValue Value="this">
+        <SimulatorContainer BoardModel="@boardModel" BoardModelNew="@boardModelNew" />
+    </CascadingValue>
 }
 
 @code {
@@ -27,17 +29,21 @@ else
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20_mini.json");
         //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/0.json");
-        boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10F.json");
+        //boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10F.json");
+        boardModel = await Http.GetFromJsonAsync<BoardModel>("sample-data/board32x20(2).json");
+        //boardModel = new();
         boardModelNew = new();
         //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
         //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));
         //boardModelNew.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes3.json"));
     }
 
-    private async Task MultipleFilesReady(IMatFileUploadEntry[] files)
+    public async Task MultipleFilesReady(IMatFileUploadEntry[] files)
     {
         try
         {
+            //boardModel = new();
+            boardModelNew = new();
             foreach (var file in files)
             {
                 using MemoryStream memoryStream = new();
@@ -45,23 +51,33 @@ else
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 using StreamReader reader = new(memoryStream);
                 string fileContent = await reader.ReadToEndAsync();
-                boardModelNew.Add(JsonConvert.DeserializeObject<BoardModel>(fileContent));
 
-                //if (file.Name == "0")
-                //{
-                //    boardModel = JsonConvert.DeserializeObject<BoardModel>(fileContent);
-                //}
-                //else
-                //{
-                //}
+                if (file.Name == "0.json")
+                {
+                    boardModel = JsonConvert.DeserializeObject<BoardModel>(fileContent);
+                }
+                else
+                {
+                    boardModelNew.Add(JsonConvert.DeserializeObject<BoardModel>(fileContent));
+                }
             }
-            Toaster.Add("Successfully Uploaded Files", MatToastType.Success, "Success", "");
-            //StateHasChanged();
+
+            if (files.Length > 0)
+            {
+                //StateHasChanged();
+                Toaster.Add("Successfully Uploaded Files", MatToastType.Success, "Success", "");
+            }
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
             Toaster.Add("Error Upoading Files", MatToastType.Danger, "Error", "");
         }
+    }
+
+    public void ResetSimulator()
+    {
+        boardModel = null;
+        boardModelNew = null;
     }
 }

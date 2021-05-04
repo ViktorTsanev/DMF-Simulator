@@ -18,11 +18,11 @@ namespace DMF_Simulator_Frontend.Models
         {
             Dictionary<string, string> info = base.GetElementInfo();
             info.TryAdd("Actuator ID", ActuatorID.ToString());
-            info.TryAdd("Actuator Type", Type);
-            info.TryAdd("Actual Temperature", ActualTemperature.ToString());
-            info.TryAdd("Desired Temperature", DesiredTemperature.ToString());
+            info.TryAdd("Type", Type);
+            info.TryAdd("Actual temp", ActualTemperature.ToString());
+            info.TryAdd("Desired temp", DesiredTemperature.ToString());
             info.TryAdd("Status", (Status ? "On" : "Off"));
-            info.TryAdd("Next desired Temperature", NextDesiredTemperature.ToString());
+            info.TryAdd("Next desired temp", NextDesiredTemperature.ToString());
             info.TryAdd("Next status", NextStatus.ToString());
             if (Corners != null)
             {

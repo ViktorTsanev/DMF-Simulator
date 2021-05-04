@@ -16,8 +16,8 @@
     private string _divCss => $"left: {Model.PositionX - _strokeWidth}px; top: {Model.PositionY - _strokeWidth}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform 1s; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
     private string _shapeCss => $"fill-opacity: 0; stroke-width:{_strokeWidth}; stroke:{Configuration["bubbleStrokeColor"]};";
 
-    private double _xRadius => Model.SizeX / 2;
-    private double _yRadius => Model.SizeY / 2;
+    private double _xRadius => (double)Model.SizeX / 2;
+    private double _yRadius => (double)Model.SizeY / 2;
 
     private double _strokeWidth;
     private double _containerWidth => Model.SizeX + 2 * _strokeWidth;

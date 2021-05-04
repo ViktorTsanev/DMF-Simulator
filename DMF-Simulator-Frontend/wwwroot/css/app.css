@@ -16,6 +16,7 @@ a, .btn-link {
 
 .content {
     padding-top: 1.1rem;
+    font-size: 10pt;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -51,13 +52,11 @@ a, .btn-link {
 
 .simulator-container {
     position: absolute;
-    background-color: black;
 }
 
 .electrode-div {
     position: absolute;
     z-index: 0;
-    /*background-color: black;*/
 }
 
 .electrode-svg {
@@ -84,7 +83,7 @@ a, .btn-link {
 
 .droplet-div {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
 }
 
 .droplet-svg {
@@ -93,7 +92,7 @@ a, .btn-link {
 
 .bubble-div {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
 }
 
 .bubble-svg {

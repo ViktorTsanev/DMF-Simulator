@@ -14,7 +14,7 @@ namespace DMF_Simulator_Frontend.Models
         {
             Dictionary<string, string> info = base.GetElementInfo();
             info.TryAdd("Sensor ID", SensorID.ToString());
-            info.TryAdd("Sensor Type", Type);
+            info.TryAdd("Type", Type);
             info.TryAdd("Value Red", ValueRed.ToString());
             info.TryAdd("Value Green", ValueGreen.ToString());
             info.TryAdd("Value Blue", ValueBlue.ToString());
