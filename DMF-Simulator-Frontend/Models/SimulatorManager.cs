@@ -11,6 +11,7 @@ namespace DMF_Simulator_Frontend.Models
         public List<BoardModel> BoardModelNew { get; private set; }
         public event EventHandler MainLoopCompleted;
         public bool IsRunning { get; private set; }
+        private int _startFromFile;
 
         public SimulatorManager(BoardModel boardModel, List<BoardModel> boardModelNew)
         {
@@ -28,7 +29,7 @@ namespace DMF_Simulator_Frontend.Models
             }
         }
 
-        private void IndividualChanges<T>(T oldElement, T newElement) where T : ElementModel
+        private static void IndividualChanges<T>(T oldElement, T newElement) where T : ElementModel
         {
             oldElement.TranslateX += newElement.PositionX - oldElement.PositionX - oldElement.TranslateX;
             Console.WriteLine("TrX {0} ID {1}", oldElement.TranslateX, oldElement.ID);
@@ -42,37 +43,53 @@ namespace DMF_Simulator_Frontend.Models
 
         private async Task ProcessChangesAsync()
         {
-            foreach (BoardModel b in BoardModelNew)
+            foreach (BoardModel b in BoardModelNew.GetRange(_startFromFile, BoardModelNew.Count - _startFromFile))
             {
-                BoardModel.Electrodes.ForEach(delegate (ElectrodeModel e)
+                if (IsRunning)
                 {
-                    if (b.Electrodes != null)
+                    _startFromFile++;
+                    BoardModel.Electrodes.ForEach(delegate (ElectrodeModel e)
                     {
-                        ElectrodeModel newElectrode = b.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
-                        if (newElectrode != null)
+                        if (b.Electrodes != null)
                         {
-                            IndividualChanges(e, newElectrode);
-                            e.Status = newElectrode.Status;
+                            ElectrodeModel newElectrode = b.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
+                            if (newElectrode != null)
+                            {
+                                IndividualChanges(e, newElectrode);
+                                e.Status = newElectrode.Status;
+                            }
                         }
-                    }
-                });
+                    });
 
-                BoardModel.Droplets.ForEach(delegate (DropletModel d)
+                    BoardModel.Droplets.ForEach(delegate (DropletModel d)
+                    {
+                        if (b.Droplets != null)
+                        {
+                            // rename to changedDroplet
+                            DropletModel newDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
+                            if (newDroplet != null)
+                            {
+                                IndividualChanges(d, newDroplet);
+                                d.Substance_Name = newDroplet.Substance_Name;
+                                d.Temperature = newDroplet.Temperature;
+                            }
+
+                            
+                        }
+                    });
+
+                    // Add newly created droplets to the current list (board)
+                    // check if (b.Droplets != null)
+                    IEnumerable<DropletModel> newDroplets = b.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID));
+                    BoardModel.Droplets.AddRange(newDroplets);
+
+                    MainLoopCompleted?.Invoke(this, EventArgs.Empty);
+                    await Task.Delay(1000);
+                }
+                else
                 {
-                    if (b.Droplets != null)
-                    {
-                        DropletModel newDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
-                        if (newDroplet != null)
-                        {
-                            IndividualChanges(d, newDroplet);
-                            d.Substance_Name = newDroplet.Substance_Name;
-                            d.Temperature = newDroplet.Temperature;
-                        }
-                    }
-                });
-
-                MainLoopCompleted?.Invoke(this, EventArgs.Empty);
-                await Task.Delay(1000);
+                    break;
+                }
             }
         }
 
@@ -82,7 +99,7 @@ namespace DMF_Simulator_Frontend.Models
             {
                 IsRunning = true;
                 await ProcessChangesAsync();
-                EndSimulator();
+                //EndSimulator();
             }
 
             //MainLoopCompleted?.Invoke(this, EventArgs.Empty);
@@ -92,9 +109,16 @@ namespace DMF_Simulator_Frontend.Models
             }*/
         }
 
+        public void PauseSimulator()
+        {
+            IsRunning = false;
+            // anything else?
+        }
+
         public void EndSimulator()
         {
             IsRunning = false;
+            //_startFromFile = 0;
         }
     }
 }

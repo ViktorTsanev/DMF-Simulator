@@ -1,6 +1,7 @@
 ﻿@page "/simulator"
 @inject HttpClient Http
 @inject IMatToaster Toaster
+@inject IConfiguration Configuration
 @using System.IO
 @using Newtonsoft.Json
 
@@ -52,7 +53,7 @@ else
                 using StreamReader reader = new(memoryStream);
                 string fileContent = await reader.ReadToEndAsync();
 
-                if (file.Name == "0.json")
+                if (file.Name == Configuration["initialBoardFileName"])
                 {
                     boardModel = JsonConvert.DeserializeObject<BoardModel>(fileContent);
                 }

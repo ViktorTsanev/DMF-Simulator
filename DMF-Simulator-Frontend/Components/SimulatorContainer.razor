@@ -1,6 +1,6 @@
 ﻿@inject IConfiguration Configuration
 
-<MatButton Icon="@(_simulatorManager.IsRunning ? "pause" : "play_arrow")" Raised="true" Disabled="@(!BoardModelNew.Any())" OnClick="_simulatorManager.StartSimulatorAsync">@(_simulatorManager.IsRunning ? "Pause simulator" : "Start simulator")</MatButton>
+<MatButton Icon="@(_simulatorManager.IsRunning ? "pause" : "play_arrow")" Raised="true" Disabled="@(!BoardModelNew.Any())" OnClick="ChangeSimulatorState">@(_simulatorManager.IsRunning ? "Pause simulator" : "Start simulator")</MatButton>
 <MatButton Icon="stop" Raised="true" OnClick="SimulatorPage.ResetSimulator">Reset simulator</MatButton>
 
 <div class="mat-layout-grid">
@@ -147,5 +147,17 @@
     private void ActivateElement(BaseElementModel e)
     {
         _activeElement = e;
+    }
+
+    private async Task ChangeSimulatorState()
+    {
+        if (_simulatorManager.IsRunning)
+        {
+            _simulatorManager.PauseSimulator();
+        }
+        else
+        {
+            await _simulatorManager.StartSimulatorAsync();
+        }
     }
 }
