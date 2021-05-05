@@ -1,7 +1,7 @@
 ﻿@inject IConfiguration Configuration
 
-<MatButton Icon="@(_simulatorManager.IsRunning ? "pause" : "play_arrow")" Unelevated="true" Disabled="@(!BoardModelNew.Any())" OnClick="_simulatorManager.StartSimulatorAsync">@(_simulatorManager.IsRunning ? "Pause simulator" : "Start simulator")</MatButton>
-<MatButton Icon="stop" Unelevated="true" OnClick="SimulatorPage.ResetSimulator">Reset simulator</MatButton>
+<MatButton Icon="@(_simulatorManager.IsRunning ? "pause" : "play_arrow")" Raised="true" Disabled="@(!BoardModelNew.Any())" OnClick="_simulatorManager.StartSimulatorAsync">@(_simulatorManager.IsRunning ? "Pause simulator" : "Start simulator")</MatButton>
+<MatButton Icon="stop" Raised="true" OnClick="SimulatorPage.ResetSimulator">Reset simulator</MatButton>
 
 <div class="mat-layout-grid">
     <div class="mat-layout-grid-inner">
@@ -37,6 +37,11 @@
         </div>
 
         <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8">
+            <div style="display: flex;">
+                <span style="flex-grow: @(_scaleFactor / _sliderMaxValue);">@(_sliderMinValue * 100)%</span>
+                <span style="flex-grow: @(1 - _scaleFactor / _sliderMaxValue);">@(Math.Round(_scaleFactor * 100))%</span>
+                <span>@(_sliderMaxValue * 100)%</span>
+            </div>
             <MatSlider TValue="double" ValueMin="@_sliderMinValue" ValueMax="@_sliderMaxValue" @bind-Value="@_scaleFactor" Immediate="false" Label="Scale Factor"></MatSlider>
             <div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss">
                 @if (_simulatorManager.BoardModel.Electrodes != null)

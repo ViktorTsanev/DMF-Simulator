@@ -11,7 +11,7 @@ namespace DMF_Simulator_Frontend.Models
         public override Dictionary<string, string> GetElementInfo()
         {
             Dictionary<string, string> info = base.GetElementInfo();
-            info.TryAdd("Substance name", Substance_Name);
+            info.TryAdd("Substance", Substance_Name);
             info.TryAdd("Color", Color);
             info.TryAdd("Temperature", Temperature.ToString());
             return info;
