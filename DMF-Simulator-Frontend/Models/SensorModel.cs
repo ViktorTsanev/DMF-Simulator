@@ -2,7 +2,7 @@
 
 namespace DMF_Simulator_Frontend.Models
 {
-    public class SensorModel : ElementModel
+    public record SensorModel : ElementModel
     {
         public int SensorID { get; set; }
         public string Type { get; set; }

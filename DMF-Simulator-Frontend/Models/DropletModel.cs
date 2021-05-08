@@ -2,7 +2,7 @@
 
 namespace DMF_Simulator_Frontend.Models
 {
-    public class DropletModel : ElementModel
+    public record DropletModel : ElementModel
     {
         public string Substance_Name { get; set; }
         public string Color { get; set; }

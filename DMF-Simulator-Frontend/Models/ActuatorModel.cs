@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DMF_Simulator_Frontend.Models
 {
-    public class ActuatorModel : ElementModel
+    public record ActuatorModel : ElementModel
     {
         public int ActuatorID { get; set; }
         public string Type { get; set; }

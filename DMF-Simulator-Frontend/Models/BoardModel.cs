@@ -2,7 +2,7 @@
 
 namespace DMF_Simulator_Frontend.Models
 {
-    public class BoardModel
+    public record BoardModel
     {
         public List<InformationModel> Information { get; set; }
         public List<ElectrodeModel> Electrodes { get; set; }

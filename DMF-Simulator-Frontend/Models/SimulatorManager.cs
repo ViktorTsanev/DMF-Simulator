@@ -8,26 +8,38 @@ namespace DMF_Simulator_Frontend.Models
     public class SimulatorManager
     {
         public BoardModel BoardModel { get; private set; }
-        public List<BoardModel> BoardModelNew { get; private set; }
+        public List<BoardModel> BoardStates { get; private set; }
         public event EventHandler MainLoopCompleted;
-        public bool IsRunning { get; private set; }
+        public bool IsStarted { get; private set; }
+        public bool IsPaused { get; private set; } = true;
         private int _startFromFile;
+        public BoardModel InitialState { get; init; }
 
         public SimulatorManager(BoardModel boardModel, List<BoardModel> boardModelNew)
         {
             BoardModel = boardModel;
-            BoardModelNew = boardModelNew;
-        }
+            InitialState = new();
+            InitialState.Droplets = new();
+            BoardModel.Droplets.ForEach(element => InitialState.Droplets.Add(element with { }));
+            InitialState.Electrodes = new();
+            BoardModel.Electrodes.ForEach(element => InitialState.Electrodes.Add(element with { }));
 
-        public void MainLoop()
-        {
-            IsRunning = true;
-
-            while (IsRunning)
+            foreach (var d in InitialState.Droplets)
             {
-                EndSimulator();
+                Console.WriteLine(d);
             }
+            BoardStates = boardModelNew;
         }
+
+        /*public void MainLoop()
+        {
+            IsStarted = true;
+
+            while (IsStarted)
+            {
+                StopSimulatorAsync();
+            }
+        }*/
 
         private static void IndividualChanges<T>(T oldElement, T newElement) where T : ElementModel
         {
@@ -43,12 +55,13 @@ namespace DMF_Simulator_Frontend.Models
 
         private async Task ProcessChangesAsync()
         {
-            foreach (BoardModel b in BoardModelNew.GetRange(_startFromFile, BoardModelNew.Count - _startFromFile))
+            //foreach (BoardModel b in BoardModelNew.GetRange(_startFromFile, BoardModelNew.Count - _startFromFile))
+            foreach (BoardModel b in BoardStates.GetRange(_startFromFile, BoardStates.Count - _startFromFile))
             {
-                if (IsRunning)
+                if (IsStarted && !IsPaused)
                 {
                     _startFromFile++;
-                    BoardModel.Electrodes.ForEach(delegate (ElectrodeModel e)
+                    BoardModel.Electrodes.ForEach(e =>
                     {
                         if (b.Electrodes != null)
                         {
@@ -61,7 +74,7 @@ namespace DMF_Simulator_Frontend.Models
                         }
                     });
 
-                    BoardModel.Droplets.ForEach(delegate (DropletModel d)
+                    BoardModel.Droplets.ForEach(d =>
                     {
                         if (b.Droplets != null)
                         {
@@ -73,13 +86,11 @@ namespace DMF_Simulator_Frontend.Models
                                 d.Substance_Name = newDroplet.Substance_Name;
                                 d.Temperature = newDroplet.Temperature;
                             }
-
-                            
                         }
                     });
 
                     // Add newly created droplets to the current list (board)
-                    // check if (b.Droplets != null)
+                    // TODO: check if (b.Droplets != null)
                     IEnumerable<DropletModel> newDroplets = b.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID));
                     BoardModel.Droplets.AddRange(newDroplets);
 
@@ -95,11 +106,12 @@ namespace DMF_Simulator_Frontend.Models
 
         public async Task StartSimulatorAsync()
         {
-            if (!IsRunning)
+            if (!IsStarted || IsPaused)
             {
-                IsRunning = true;
+                IsStarted = true;
+                IsPaused = false;
                 await ProcessChangesAsync();
-                //EndSimulator();
+                //await StopSimulatorAsync();
             }
 
             //MainLoopCompleted?.Invoke(this, EventArgs.Empty);
@@ -111,14 +123,22 @@ namespace DMF_Simulator_Frontend.Models
 
         public void PauseSimulator()
         {
-            IsRunning = false;
-            // anything else?
+            IsPaused = true;
         }
 
-        public void EndSimulator()
+        public async Task StopSimulatorAsync()
         {
-            IsRunning = false;
-            //_startFromFile = 0;
+            IsStarted = false;
+            IsPaused = true;
+            _startFromFile = 0;
+
+            BoardModel.Droplets = new();
+            InitialState.Droplets.ForEach(element => BoardModel.Droplets.Add(element with { }));
+            BoardModel.Electrodes = new();
+            InitialState.Electrodes.ForEach(element => BoardModel.Electrodes.Add(element with { }));
+
+            MainLoopCompleted?.Invoke(this, EventArgs.Empty);
+            await Task.Delay(1000);
         }
     }
 }

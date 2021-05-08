@@ -2,7 +2,7 @@
 
 namespace DMF_Simulator_Frontend.Models
 {
-    public abstract class BaseElementModel
+    public abstract record BaseElementModel
     {
         public string Name { get; set; }
         public int ID { get; set; }
