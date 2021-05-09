@@ -13,6 +13,7 @@ namespace DMF_Simulator_Frontend.Models
         public event EventHandler SimulatorStateChanged;
         public static bool IsStarted { get; private set; }
         public static bool IsPaused { get; private set; } = true;
+        public static int AnimationSpeed { get; set; } = 500;
         private static int _startSimFromState;
 
         public SimulatorManager(BoardModel boardModel, List<BoardModel> boardModelNew)
@@ -82,7 +83,7 @@ namespace DMF_Simulator_Frontend.Models
                     }
 
                     SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
-                    await Task.Delay(1000);
+                    await Task.Delay(AnimationSpeed);
                 }
                 else
                 {
@@ -125,7 +126,7 @@ namespace DMF_Simulator_Frontend.Models
             InitialState.Electrodes.ForEach(element => BoardModel.Electrodes.Add(element with { }));
 
             SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
-            await Task.Delay(1000);
+            await Task.Delay(AnimationSpeed);
         }
     }
 }

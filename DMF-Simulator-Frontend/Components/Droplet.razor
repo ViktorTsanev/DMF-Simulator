@@ -13,13 +13,15 @@
     [Parameter]
     public EventCallback<MouseEventArgs> OnHoverCallback { get; set; }
 
-    private string _divCss => $"left: {Model.PositionX - _strokeWidth}px; top: {Model.PositionY - _strokeWidth}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform 1s; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
+    private string _divCss => $"left: {Model.PositionX - _strokeWidth}px; top: {Model.PositionY - _strokeWidth}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform {_animationSpeed}ms; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
     private string _shapeCss => $"fill: {Model.Color}; stroke-width: {_strokeWidth}; stroke: {Configuration["dropletStrokeColor"]};";
 
     private double _xRadius => (double)Model.SizeX / 2;
     private double _yRadius => (double)Model.SizeY / 2;
 
+    private int _animationSpeed;
     private double _strokeWidth;
+
     private double _containerWidth => Model.SizeX + 2 * _strokeWidth;
     private double _containerHeight => Model.SizeY + 2 * _strokeWidth;
 
@@ -29,5 +31,9 @@
     protected override void OnInitialized()
     {
         double.TryParse(Configuration["dropletStrokeWidth"], out _strokeWidth);
+        if (!int.TryParse(Configuration["bubbleStrokeWidth"], out _animationSpeed))
+        {
+            _animationSpeed = 500;
+        }
     }
 }
