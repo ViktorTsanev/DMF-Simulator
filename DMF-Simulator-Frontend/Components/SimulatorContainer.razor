@@ -125,7 +125,7 @@
         }
 
         _simulatorManager = new(BoardModel, BoardModelNew);
-        _simulatorManager.MainLoopCompleted += (o, e) => StateHasChanged();
+        _simulatorManager.SimulatorStateChanged += (o, e) => StateHasChanged();
     }
 
     private void ToggleVisibility<T>(bool toggled, IList<T> elements) where T : ElementModel

@@ -7,7 +7,6 @@
 @if (_initialBoard == null)
 {
     <MatFileUpload OnChange="MultipleFilesReady" AllowMultiple="true" Label="Drop files here or Browse"></MatFileUpload>
-    <!--<MatProgressCircle Indeterminate="true" Size="MatProgressCircleSize.Medium" />-->
 }
 else
 {
@@ -32,7 +31,6 @@ else
         //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/0.json");
         //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10F.json");
         _initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board32x20(2).json");
-        //_initialBoard = new();
         _boardStates = new();
         //_boardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
         //_boardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));

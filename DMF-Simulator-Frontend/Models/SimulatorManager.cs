@@ -8,38 +8,25 @@ namespace DMF_Simulator_Frontend.Models
     public class SimulatorManager
     {
         public BoardModel BoardModel { get; private set; }
+        public BoardModel InitialState { get; init; }
         public List<BoardModel> BoardStates { get; private set; }
-        public event EventHandler MainLoopCompleted;
+        public event EventHandler SimulatorStateChanged;
         public bool IsStarted { get; private set; }
         public bool IsPaused { get; private set; } = true;
-        private int _startFromFile;
-        public BoardModel InitialState { get; init; }
+        private int _startSimFromState;
 
         public SimulatorManager(BoardModel boardModel, List<BoardModel> boardModelNew)
         {
             BoardModel = boardModel;
+
             InitialState = new();
             InitialState.Droplets = new();
             BoardModel.Droplets.ForEach(element => InitialState.Droplets.Add(element with { }));
             InitialState.Electrodes = new();
             BoardModel.Electrodes.ForEach(element => InitialState.Electrodes.Add(element with { }));
 
-            foreach (var d in InitialState.Droplets)
-            {
-                Console.WriteLine(d);
-            }
             BoardStates = boardModelNew;
         }
-
-        /*public void MainLoop()
-        {
-            IsStarted = true;
-
-            while (IsStarted)
-            {
-                StopSimulatorAsync();
-            }
-        }*/
 
         private static void IndividualChanges<T>(T oldElement, T newElement) where T : ElementModel
         {
@@ -55,21 +42,20 @@ namespace DMF_Simulator_Frontend.Models
 
         private async Task ProcessChangesAsync()
         {
-            //foreach (BoardModel b in BoardModelNew.GetRange(_startFromFile, BoardModelNew.Count - _startFromFile))
-            foreach (BoardModel b in BoardStates.GetRange(_startFromFile, BoardStates.Count - _startFromFile))
+            foreach (BoardModel b in BoardStates.GetRange(_startSimFromState, BoardStates.Count - _startSimFromState))
             {
                 if (IsStarted && !IsPaused)
                 {
-                    _startFromFile++;
+                    _startSimFromState++;
                     BoardModel.Electrodes.ForEach(e =>
                     {
                         if (b.Electrodes != null)
                         {
-                            ElectrodeModel newElectrode = b.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
-                            if (newElectrode != null)
+                            ElectrodeModel changedElectrode = b.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
+                            if (changedElectrode != null)
                             {
-                                IndividualChanges(e, newElectrode);
-                                e.Status = newElectrode.Status;
+                                IndividualChanges(e, changedElectrode);
+                                e.Status = changedElectrode.Status;
                             }
                         }
                     });
@@ -78,23 +64,24 @@ namespace DMF_Simulator_Frontend.Models
                     {
                         if (b.Droplets != null)
                         {
-                            // rename to changedDroplet
-                            DropletModel newDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
-                            if (newDroplet != null)
+                            DropletModel changedDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
+                            if (changedDroplet != null)
                             {
-                                IndividualChanges(d, newDroplet);
-                                d.Substance_Name = newDroplet.Substance_Name;
-                                d.Temperature = newDroplet.Temperature;
+                                IndividualChanges(d, changedDroplet);
+                                d.Substance_Name = changedDroplet.Substance_Name;
+                                d.Temperature = changedDroplet.Temperature;
                             }
                         }
                     });
 
                     // Add newly created droplets to the current list (board)
-                    // TODO: check if (b.Droplets != null)
-                    IEnumerable<DropletModel> newDroplets = b.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID));
-                    BoardModel.Droplets.AddRange(newDroplets);
+                    if (b.Droplets != null)
+                    {
+                        IEnumerable<DropletModel> newDroplets = b.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID));
+                        BoardModel.Droplets.AddRange(newDroplets);
+                    }
 
-                    MainLoopCompleted?.Invoke(this, EventArgs.Empty);
+                    SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
                     await Task.Delay(1000);
                 }
                 else
@@ -111,14 +98,11 @@ namespace DMF_Simulator_Frontend.Models
                 IsStarted = true;
                 IsPaused = false;
                 await ProcessChangesAsync();
-                //await StopSimulatorAsync();
+                if (_startSimFromState == BoardStates.Count)
+                {
+                    await StopSimulatorAsync();
+                }
             }
-
-            //MainLoopCompleted?.Invoke(this, EventArgs.Empty);
-            /*if (!IsRunning)
-            {
-                MainLoop();
-            }*/
         }
 
         public void PauseSimulator()
@@ -130,14 +114,14 @@ namespace DMF_Simulator_Frontend.Models
         {
             IsStarted = false;
             IsPaused = true;
-            _startFromFile = 0;
+            _startSimFromState = 0;
 
             BoardModel.Droplets = new();
             InitialState.Droplets.ForEach(element => BoardModel.Droplets.Add(element with { }));
             BoardModel.Electrodes = new();
             InitialState.Electrodes.ForEach(element => BoardModel.Electrodes.Add(element with { }));
 
-            MainLoopCompleted?.Invoke(this, EventArgs.Empty);
+            SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
             await Task.Delay(1000);
         }
     }
