@@ -11,9 +11,9 @@ namespace DMF_Simulator_Frontend.Models
         public BoardModel InitialState { get; init; }
         public List<BoardModel> BoardStates { get; private set; }
         public event EventHandler SimulatorStateChanged;
-        public bool IsStarted { get; private set; }
-        public bool IsPaused { get; private set; } = true;
-        private int _startSimFromState;
+        public static bool IsStarted { get; private set; }
+        public static bool IsPaused { get; private set; } = true;
+        private static int _startSimFromState;
 
         public SimulatorManager(BoardModel boardModel, List<BoardModel> boardModelNew)
         {
@@ -31,13 +31,13 @@ namespace DMF_Simulator_Frontend.Models
         private static void IndividualChanges<T>(T oldElement, T newElement) where T : ElementModel
         {
             oldElement.TranslateX += newElement.PositionX - oldElement.PositionX - oldElement.TranslateX;
-            Console.WriteLine("TrX {0} ID {1}", oldElement.TranslateX, oldElement.ID);
+            //Console.WriteLine("TrX {0} ID {1}", oldElement.TranslateX, oldElement.ID);
             oldElement.TranslateY += newElement.PositionY - oldElement.PositionY - oldElement.TranslateY;
-            Console.WriteLine("TrY {0} ID {1}", oldElement.TranslateY, oldElement.ID);
+            //Console.WriteLine("TrY {0} ID {1}", oldElement.TranslateY, oldElement.ID);
             oldElement.ScaleX = (double)newElement.SizeX / oldElement.SizeX;
-            Console.WriteLine("ScaleX {0} ID {1}", oldElement.ScaleX, oldElement.ID);
+            //Console.WriteLine("ScaleX {0} ID {1}", oldElement.ScaleX, oldElement.ID);
             oldElement.ScaleY = (double)newElement.SizeY / oldElement.SizeY;
-            Console.WriteLine("ScaleY {0} ID {1}", oldElement.ScaleY, oldElement.ID);
+            //Console.WriteLine("ScaleY {0} ID {1}", oldElement.ScaleY, oldElement.ID);
         }
 
         private async Task ProcessChangesAsync()
@@ -97,15 +97,18 @@ namespace DMF_Simulator_Frontend.Models
             {
                 IsStarted = true;
                 IsPaused = false;
-                await ProcessChangesAsync();
-                if (_startSimFromState == BoardStates.Count)
+                if (_startSimFromState < BoardStates.Count)
+                {
+                    await ProcessChangesAsync();
+                }
+                if (_startSimFromState >= BoardStates.Count)
                 {
                     await StopSimulatorAsync();
                 }
             }
         }
 
-        public void PauseSimulator()
+        public static void PauseSimulator()
         {
             IsPaused = true;
         }
