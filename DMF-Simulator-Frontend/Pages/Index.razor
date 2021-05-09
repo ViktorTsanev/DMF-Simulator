@@ -1,7 +1,38 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Logging
+@implements IDisposable
+@inject NavigationManager NavigationManager
+@inject ILogger<Index> Logger
 
-<h1>Hello, world!</h1>
+<h1>Hello!</h1>
 
-Welcome to your new app.
+<p>
+    <div>Welcome to the new Digital Microfluidic Biochips Simulator app.</div>
+    <div>Developed by Viktor Anzhelev Tsanev.</div>
+</p>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div>
+    <MatButton Outlined="true" OnClick="NavigateToSimulatorComponent">Navigate to the Simulator</MatButton>
+</div>
+
+@code {
+    private void NavigateToSimulatorComponent()
+    {
+        NavigationManager.NavigateTo("simulator");
+    }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += HandleLocationChanged;
+    }
+
+    private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        Logger.LogInformation("URL of new location: {Location}", e.Location);
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= HandleLocationChanged;
+    }
+}
