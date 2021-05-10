@@ -29,62 +29,61 @@
                     <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Sensors)" Disabled="BoardModel.Sensors == null || !BoardModel.Sensors.Any()" ValueChanged="@(e => ToggleVisibility(e, _simulatorManager.BoardModel.Sensors))" />
                 </div>
             </MatPaper>
-        </div>
-
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-2">
             <MatPaper Elevation="3" Rounded="true">
                 <ElementInfo Element="@_activeElement" />
             </MatPaper>
         </div>
 
-        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-8">
+        <div class="mat-layout-grid-cell mat-layout-grid-cell-span-10">
             <div style="display: flex;">
                 <span style="flex-grow: @(_scaleFactor / _sliderMaxValue);">@(_sliderMinValue * 100)%</span>
                 <span style="flex-grow: @(1 - _scaleFactor / _sliderMaxValue);">@(Math.Round(_scaleFactor * 100))%</span>
                 <span>@(_sliderMaxValue * 100)%</span>
             </div>
             <MatSlider TValue="double" ValueMin="@_sliderMinValue" ValueMax="@_sliderMaxValue" @bind-Value="@_scaleFactor" Immediate="false" Label="Scale Factor"></MatSlider>
-            <div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onmouseout="() => ActivateElement(null)">
-                @if (_simulatorManager.BoardModel.Electrodes != null)
-                {
-                    foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
+            <MatPaper Elevation="0" Style="@_simContainerStyle">
+                <div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onmouseout="() => ActivateElement(null)">
+                    @if (_simulatorManager.BoardModel.Electrodes != null)
                     {
-                        <Electrode Model="electrode" OnHoverCallback="() => ActivateElement(electrode)" />
+                        foreach (var electrode in _simulatorManager.BoardModel.Electrodes)
+                        {
+                            <Electrode Model="electrode" OnHoverCallback="() => ActivateElement(electrode)" />
+                        }
                     }
-                }
 
-                @if (_simulatorManager.BoardModel.Actuators != null)
-                {
-                    foreach (var actuator in _simulatorManager.BoardModel.Actuators)
+                    @if (_simulatorManager.BoardModel.Actuators != null)
                     {
-                        <Actuator Model="actuator" OnHoverCallback="() => ActivateElement(actuator)" />
+                        foreach (var actuator in _simulatorManager.BoardModel.Actuators)
+                        {
+                            <Actuator Model="actuator" OnHoverCallback="() => ActivateElement(actuator)" />
+                        }
                     }
-                }
 
-                @if (_simulatorManager.BoardModel.Sensors != null)
-                {
-                    foreach (var sensor in _simulatorManager.BoardModel.Sensors)
+                    @if (_simulatorManager.BoardModel.Sensors != null)
                     {
-                        <Sensor Model="sensor" OnHoverCallback="() => ActivateElement(sensor)" />
+                        foreach (var sensor in _simulatorManager.BoardModel.Sensors)
+                        {
+                            <Sensor Model="sensor" OnHoverCallback="() => ActivateElement(sensor)" />
+                        }
                     }
-                }
 
-                @if (_simulatorManager.BoardModel.Droplets != null)
-                {
-                    foreach (var droplet in _simulatorManager.BoardModel.Droplets)
+                    @if (_simulatorManager.BoardModel.Droplets != null)
                     {
-                        <Droplet Model="droplet" OnHoverCallback="() => ActivateElement(droplet)" />
+                        foreach (var droplet in _simulatorManager.BoardModel.Droplets)
+                        {
+                            <Droplet Model="droplet" OnHoverCallback="() => ActivateElement(droplet)" />
+                        }
                     }
-                }
 
-                @if (_simulatorManager.BoardModel.Bubbles != null)
-                {
-                    foreach (var bubble in _simulatorManager.BoardModel.Bubbles)
+                    @if (_simulatorManager.BoardModel.Bubbles != null)
                     {
-                        <Bubble Model="bubble" OnHoverCallback="() => ActivateElement(bubble)" />
+                        foreach (var bubble in _simulatorManager.BoardModel.Bubbles)
+                        {
+                            <Bubble Model="bubble" OnHoverCallback="() => ActivateElement(bubble)" />
+                        }
                     }
-                }
-            </div>
+                </div>
+            </MatPaper>
         </div>
     </div>
 </div>
@@ -102,7 +101,11 @@
     private SimulatorManager _simulatorManager;
     private BaseElementModel _activeElement;
 
-    private string _divCss => $"transition: transform 1s; transform: scale({_scaleFactor});";
+    private string _divCss => $"transition: transform 1s; transform-origin: left top; transform: scale({_scaleFactor});";
+
+    private int _containerWidth => _simulatorManager.BoardModel.Information.FirstOrDefault().SizeX;
+    private int _containerHeight => _simulatorManager.BoardModel.Information.FirstOrDefault().SizeY;
+    private string _simContainerStyle => $"width: 100%; height: 100%; overflow: scroll;";
 
     private double _scaleFactor;
     private double _sliderMinValue;

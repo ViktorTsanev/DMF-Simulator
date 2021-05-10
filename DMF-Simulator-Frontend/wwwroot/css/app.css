@@ -51,7 +51,7 @@ a, .btn-link {
     }
 
 .simulator-container {
-    position: absolute;
+    position: relative;
 }
 
 .electrode-div {
