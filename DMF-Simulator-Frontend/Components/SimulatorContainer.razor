@@ -11,6 +11,11 @@
         <div class="col">
             <MatButton Icon="clear" Outlined="true" OnClick="SimulatorPage.ResetSimulator">Reset simulator</MatButton>
         </div>
+        <div class="col">
+            <MatPaper Elevation="3" Rounded="true" Style="width: max-content">
+                <div style="padding: 0px 5px">State: @_currentAnimationName</div>
+            </MatPaper>
+        </div>
     </div>
     <div class="row" style="flex-grow: 1">
         <div class="col-3 col-lg-2">
@@ -112,6 +117,7 @@
     private BaseElementModel _activeElement;
 
     private string _divCss => $"transition: transform 1s; transform-origin: left top; transform: scale({_scaleFactor});";
+    private string _currentAnimationName = "0.json";
 
     private double _scaleFactor;
     private double _sliderMinValue;
@@ -141,7 +147,13 @@
         }
 
         _simulatorManager = new(AnimationTimePoints, BoardModel, BoardModelNew);
-        _simulatorManager.SimulatorStateChanged += (o, e) => StateHasChanged();
+        _simulatorManager.SimulatorStateChanged += (o, args) => NewAnimation(args);
+    }
+
+    private void NewAnimation(AnimationEventArgs args)
+    {
+        _currentAnimationName = args.CurrentAnimationName;
+        StateHasChanged();
     }
 
     private void ToggleVisibility<T>(bool toggled, IList<T> elements) where T : ElementModel

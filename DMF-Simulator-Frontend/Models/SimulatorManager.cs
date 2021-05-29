@@ -12,7 +12,7 @@ namespace DMF_Simulator_Frontend.Models
         public BoardModel InitialState { get; init; }
         public List<BoardModel> BoardStates { get; private set; }
         public List<int> AnimationTimePoints { get; private set; }
-        public event EventHandler SimulatorStateChanged;
+        public event EventHandler<AnimationEventArgs> SimulatorStateChanged;
         public static bool IsStarted { get; private set; }
         public static bool IsPaused { get; private set; } = true;
         public static int AnimationSpeedFactor { get; set; } = 1;
@@ -50,19 +50,26 @@ namespace DMF_Simulator_Frontend.Models
             {
                 if (IsStarted && !IsPaused)
                 {
+                    // Process 1 change.
                     Stopwatch sw = Stopwatch.StartNew();
                     ProcessChange(newBoard);
                     sw.Stop();
                     long changeTime = sw.ElapsedMilliseconds;
                     Console.WriteLine("Elapsed after processing changes: {0}", changeTime);
                     
+                    // Raise event. Rerender simulator component.
                     sw.Restart();
                     int speed = AnimationSpeedFactor * (AnimationTimePoints.ElementAt(_startSimFromState + 1) - AnimationTimePoints.ElementAt(_startSimFromState));
                     ElementModel.AnimationSpeed = speed;
-                    SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
+                    
+                    AnimationEventArgs args = new();
+                    args.CurrentAnimationName = AnimationTimePoints.ElementAt(_startSimFromState).ToString() + ".json";
+                    SimulatorStateChanged?.Invoke(this, args);
+                    
                     long eventTime = sw.ElapsedMilliseconds;
                     Console.WriteLine("Elapsed after invoking event: {0}", eventTime);
                     
+                    // Delay processing to follow animation timing.
                     sw.Restart();
                     speed = speed - changeTime - eventTime <= 0 ? 1 : (int)(speed - changeTime - eventTime);
                     await Task.Delay(speed);
@@ -144,7 +151,9 @@ namespace DMF_Simulator_Frontend.Models
             BoardModel.Electrodes = new();
             InitialState.Electrodes.ForEach(element => BoardModel.Electrodes.Add(element with { }));
 
-            SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
+            AnimationEventArgs args = new();
+            args.CurrentAnimationName = "0.json";
+            SimulatorStateChanged?.Invoke(this, args);
             await Task.Delay(ElementModel.AnimationSpeed);
         }
     }
