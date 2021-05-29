@@ -11,6 +11,7 @@ namespace DMF_Simulator_Frontend.Models
         public double ScaleX { get; set; } = 1;
         public double ScaleY { get; set; } = 1;
         public bool Visible { get; set; } = true;
+        public static int AnimationSpeed { get; set; }
 
         public override Dictionary<string, string> GetElementInfo()
         {

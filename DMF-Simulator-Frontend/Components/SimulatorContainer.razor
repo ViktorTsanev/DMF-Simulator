@@ -3,7 +3,7 @@
 <div class="container-fluid" style="height: 100vh; display: flex; flex-direction: column">
     <div class="row" style="margin-bottom: 10px;">
         <div class="col" style="margin-bottom: 5px">
-            <MatButton Icon="@(SimulatorManager.IsPaused ? "play_arrow" : "pause")" Outlined="true" Disabled="!BoardModelNew.Any()" OnClick="ChangeSimulatorState">@SetPlayPauseButtonText()</MatButton>
+            <MatButton Icon="@(SimulatorManager.IsPaused ? "play_arrow" : "pause")" Outlined="true" Disabled="!BoardModelNew.Any()" OnClick="ChangeSimulatorStateAsync">@SetPlayPauseButtonText()</MatButton>
         </div>
         <div class="col" style="margin-bottom: 5px">
             <MatButton Icon="stop" Outlined="true" Disabled="!SimulatorManager.IsStarted" OnClick="_simulatorManager.StopSimulatorAsync">Stop simulator</MatButton>
@@ -105,6 +105,9 @@
     [Parameter]
     public List<BoardModel> BoardModelNew { get; set; }
 
+    [Parameter]
+    public List<int> AnimationTimePoints { get; set; }
+
     private SimulatorManager _simulatorManager;
     private BaseElementModel _activeElement;
 
@@ -131,13 +134,13 @@
             _scaleFactor = 1;
         }
 
-        int animationSpeed;
-        if (int.TryParse(Configuration["animationSpeed"], out animationSpeed))
+        int animationSpeedFactor;
+        if (int.TryParse(Configuration["animationSpeedFactor"], out animationSpeedFactor))
         {
-            SimulatorManager.AnimationSpeed = animationSpeed;
+            SimulatorManager.AnimationSpeedFactor = animationSpeedFactor;
         }
 
-        _simulatorManager = new(BoardModel, BoardModelNew);
+        _simulatorManager = new(AnimationTimePoints, BoardModel, BoardModelNew);
         _simulatorManager.SimulatorStateChanged += (o, e) => StateHasChanged();
     }
 
@@ -179,7 +182,7 @@
         }
     }
 
-    private async Task ChangeSimulatorState()
+    private async Task ChangeSimulatorStateAsync()
     {
         if (SimulatorManager.IsPaused)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,15 +11,17 @@ namespace DMF_Simulator_Frontend.Models
         public BoardModel BoardModel { get; private set; }
         public BoardModel InitialState { get; init; }
         public List<BoardModel> BoardStates { get; private set; }
+        public List<int> AnimationTimePoints { get; private set; }
         public event EventHandler SimulatorStateChanged;
         public static bool IsStarted { get; private set; }
         public static bool IsPaused { get; private set; } = true;
-        public static int AnimationSpeed { get; set; } = 500;
+        public static int AnimationSpeedFactor { get; set; } = 1;
         private static int _startSimFromState;
 
-        public SimulatorManager(BoardModel boardModel, List<BoardModel> boardModelNew)
+        public SimulatorManager(List<int> animationTimePoints, BoardModel boardModel, List<BoardModel> boardModelNew)
         {
             BoardModel = boardModel;
+            AnimationTimePoints = animationTimePoints;
 
             InitialState = new();
             InitialState.Droplets = new();
@@ -29,7 +32,7 @@ namespace DMF_Simulator_Frontend.Models
             BoardStates = boardModelNew;
         }
 
-        private static void IndividualChanges<T>(T oldElement, T newElement) where T : ElementModel
+        private static void ElementChanges<T>(T oldElement, T newElement) where T : ElementModel
         {
             oldElement.TranslateX += newElement.PositionX - oldElement.PositionX - oldElement.TranslateX;
             //Console.WriteLine("TrX {0} ID {1}", oldElement.TranslateX, oldElement.ID);
@@ -43,52 +46,68 @@ namespace DMF_Simulator_Frontend.Models
 
         private async Task ProcessChangesAsync()
         {
-            foreach (BoardModel b in BoardStates.GetRange(_startSimFromState, BoardStates.Count - _startSimFromState))
+            foreach (BoardModel newBoard in BoardStates.GetRange(_startSimFromState, BoardStates.Count - _startSimFromState))
             {
                 if (IsStarted && !IsPaused)
                 {
-                    _startSimFromState++;
-                    BoardModel.Electrodes.ForEach(e =>
-                    {
-                        if (b.Electrodes != null)
-                        {
-                            ElectrodeModel changedElectrode = b.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
-                            if (changedElectrode != null)
-                            {
-                                IndividualChanges(e, changedElectrode);
-                                e.Status = changedElectrode.Status;
-                            }
-                        }
-                    });
-
-                    BoardModel.Droplets.ForEach(d =>
-                    {
-                        if (b.Droplets != null)
-                        {
-                            DropletModel changedDroplet = b.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
-                            if (changedDroplet != null)
-                            {
-                                IndividualChanges(d, changedDroplet);
-                                d.Substance_Name = changedDroplet.Substance_Name;
-                                d.Temperature = changedDroplet.Temperature;
-                            }
-                        }
-                    });
-
-                    // Add newly created droplets to the current list (board)
-                    if (b.Droplets != null)
-                    {
-                        IEnumerable<DropletModel> newDroplets = b.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID));
-                        BoardModel.Droplets.AddRange(newDroplets);
-                    }
-
+                    Stopwatch sw = Stopwatch.StartNew();
+                    ProcessChange(newBoard);
+                    sw.Stop();
+                    long changeTime = sw.ElapsedMilliseconds;
+                    Console.WriteLine("Elapsed after processing changes: {0}", changeTime);
+                    
+                    sw.Restart();
+                    int speed = AnimationSpeedFactor * (AnimationTimePoints.ElementAt(_startSimFromState + 1) - AnimationTimePoints.ElementAt(_startSimFromState));
+                    ElementModel.AnimationSpeed = speed;
                     SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
-                    await Task.Delay(AnimationSpeed);
+                    long eventTime = sw.ElapsedMilliseconds;
+                    Console.WriteLine("Elapsed after invoking event: {0}", eventTime);
+                    
+                    sw.Restart();
+                    speed = speed - changeTime - eventTime <= 0 ? 1 : (int)(speed - changeTime - eventTime);
+                    await Task.Delay(speed);
+                    sw.Stop();
+                    Console.WriteLine("Elapsed after delay: {0}", sw.ElapsedMilliseconds);
+                    _startSimFromState++;
                 }
                 else
                 {
                     break;
                 }
+            }
+        }
+
+        private void ProcessChange(BoardModel newBoard)
+        {
+            if (newBoard.Electrodes != null)
+            {
+                newBoard.Electrodes.ForEach(e =>
+                {
+                    ElectrodeModel changedElectrode = BoardModel.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
+                    if (changedElectrode != null)
+                    {
+                        ElementChanges(changedElectrode, e);
+                        changedElectrode.Status = e.Status;
+                    }
+                });
+            }
+
+            if (newBoard.Droplets != null)
+            {
+                newBoard.Droplets.ForEach(d =>
+                {
+                    DropletModel changedDroplet = BoardModel.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
+                    if (changedDroplet != null)
+                    {
+                        ElementChanges(changedDroplet, d);
+                        changedDroplet.Substance_Name = d.Substance_Name;
+                        changedDroplet.Temperature = d.Temperature;
+                    }
+                });
+
+                // Add newly created droplets to the current list (board)
+                IEnumerable<DropletModel> newDroplets = newBoard.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID));
+                BoardModel.Droplets.AddRange(newDroplets);
             }
         }
 
@@ -126,7 +145,7 @@ namespace DMF_Simulator_Frontend.Models
             InitialState.Electrodes.ForEach(element => BoardModel.Electrodes.Add(element with { }));
 
             SimulatorStateChanged?.Invoke(this, EventArgs.Empty);
-            await Task.Delay(AnimationSpeed);
+            await Task.Delay(ElementModel.AnimationSpeed);
         }
     }
 }

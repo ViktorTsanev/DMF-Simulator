@@ -11,13 +11,14 @@
 else
 {
     <CascadingValue Value="this" IsFixed="true">
-        <SimulatorContainer BoardModel="_initialBoard" BoardModelNew="_boardStates" />
+        <SimulatorContainer BoardModel="_initialBoard" BoardModelNew="_boardStates" AnimationTimePoints="_animationTimePoints" />
     </CascadingValue>
 }
 
 @code {
     private BoardModel _initialBoard;
     private List<BoardModel> _boardStates;
+    private List<int> _animationTimePoints;
 
     // Use this method to load default data.
     /*protected override async Task OnInitializedAsync()
@@ -46,6 +47,7 @@ else
 
             _initialBoard = simulatorData.Item1;
             _boardStates = simulatorData.Item2;
+            _animationTimePoints = simulatorData.Item3;
 
             if (files.Length > 0)
             {
