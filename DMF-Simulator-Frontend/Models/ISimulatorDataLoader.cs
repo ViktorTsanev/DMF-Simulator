@@ -9,11 +9,11 @@ namespace DMF_Simulator_Frontend.Models
 {
     interface ISimulatorDataLoader
     {
-        public async Task<Tuple<BoardModel, List<BoardModel>, List<int>>> LoadSimulatorDataAsync(IMatFileUploadEntry[] files, string initialBoardFileName)
+        public async Task<SimulatorData> LoadSimulatorDataAsync(IMatFileUploadEntry[] files, string initialBoardFileName)
         {
-            BoardModel initialBoard = new();
-            List<BoardModel> boardStates = new();
-            List<int> animationTimePoints = new();
+            SimulatorData simulatorData = new();
+            simulatorData.AnimationTimePoints = new();
+            simulatorData.BoardStates = new();
 
             foreach (var file in files)
             {
@@ -21,19 +21,19 @@ namespace DMF_Simulator_Frontend.Models
 
                 if (file.Name == initialBoardFileName)
                 {
-                    animationTimePoints.Add(0);
-                    initialBoard = DeserializeBoard(fileContent);
+                    simulatorData.AnimationTimePoints.Add(0);
+                    simulatorData.InitialBoard = DeserializeBoard(fileContent);
                 }
                 else
                 {
                     string trimmedFileName = file.Name.Replace(".json", "");
                     int.TryParse(trimmedFileName, out int timePoint);
-                    animationTimePoints.Add(timePoint);
-                    boardStates.Add(DeserializeBoard(fileContent));
+                    simulatorData.AnimationTimePoints.Add(timePoint);
+                    simulatorData.BoardStates.Add(DeserializeBoard(fileContent));
                 }
             }
 
-            return new Tuple<BoardModel, List<BoardModel>, List<int>>(initialBoard, boardStates, animationTimePoints);
+            return simulatorData;
         }
 
         public static async Task<string> ConvertFileToStringAsync(IMatFileUploadEntry file)

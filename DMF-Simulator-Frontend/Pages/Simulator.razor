@@ -4,38 +4,45 @@
 @inject IMatToaster Toaster
 @inject IConfiguration Configuration
 
-@if (_initialBoard == null)
+@if (_simulatorData == null)
 {
     <MatFileUpload OnChange="MultipleFilesReady" AllowMultiple="true" Label="Drop files here or Browse"></MatFileUpload>
 }
-else
+else if (_simulatorData.InitialBoard != null && _simulatorData.BoardStates != null && _simulatorData.AnimationTimePoints != null)
 {
     <CascadingValue Value="this" IsFixed="true">
-        <SimulatorContainer BoardModel="_initialBoard" BoardModelNew="_boardStates" AnimationTimePoints="_animationTimePoints" />
+        <SimulatorContainer SimulatorData="_simulatorData" />
     </CascadingValue>
+}
+else
+{
+    <MatProgressCircle Size="MatProgressCircleSize.Medium" />
 }
 
 @code {
-    private BoardModel _initialBoard;
-    private List<BoardModel> _boardStates;
-    private List<int> _animationTimePoints;
+    private SimulatorData _simulatorData;
 
     // Use this method to load default data.
     /*protected override async Task OnInitializedAsync()
     {
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10.json");
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/100x100.json");
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20_mini.json");
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/0.json");
-        //_initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10F.json");
-        _initialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board32x20(2).json");
-        _boardStates = new();
-        //_boardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
-        //_boardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));
-        //_boardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes3.json"));
+        _simulatorData = new();
+
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10.json");
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/boardWithEverything.json");
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/100x100.json");
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20_mini.json");
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/0.json");
+        _simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10F.json");
+        //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board32x20(2).json");
+
+        _simulatorData.BoardStates = new();
+        _simulatorData.BoardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes1.json"));
+        _simulatorData.BoardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes2.json"));
+        _simulatorData.BoardStates.Add(await Http.GetFromJsonAsync<BoardModel>("sample-data/changes3.json"));
+
+        _simulatorData.AnimationTimePoints = new() { 0, 100, 200, 300 };
     }*/
 
     public async Task MultipleFilesReady(IMatFileUploadEntry[] files)
@@ -43,11 +50,7 @@ else
         try
         {
             ISimulatorDataLoader dataLoader = new Simulator();
-            var simulatorData = await dataLoader.LoadSimulatorDataAsync(files, Configuration["initialBoardFileName"]);
-
-            _initialBoard = simulatorData.Item1;
-            _boardStates = simulatorData.Item2;
-            _animationTimePoints = simulatorData.Item3;
+            _simulatorData = await dataLoader.LoadSimulatorDataAsync(files, Configuration["initialBoardFileName"]);
 
             if (files.Length > 0)
             {
@@ -64,7 +67,6 @@ else
 
     public void ResetSimulator()
     {
-        _initialBoard = null;
-        _boardStates = null;
+        _simulatorData = null;
     }
 }

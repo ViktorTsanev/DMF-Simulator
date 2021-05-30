@@ -3,7 +3,7 @@
 <div class="container-fluid" style="height: 100vh; display: flex; flex-direction: column">
     <div class="row" style="margin-bottom: 10px;">
         <div class="col" style="margin-bottom: 5px">
-            <MatButton Icon="@(SimulatorManager.IsPaused ? "play_arrow" : "pause")" Outlined="true" Disabled="!BoardModelNew.Any()" OnClick="ChangeSimulatorStateAsync">@SetPlayPauseButtonText()</MatButton>
+            <MatButton Icon="@(SimulatorManager.IsPaused ? "play_arrow" : "pause")" Outlined="true" Disabled="!SimulatorData.BoardStates.Any()" OnClick="ChangeSimulatorStateAsync">@SetPlayPauseButtonText()</MatButton>
         </div>
         <div class="col" style="margin-bottom: 5px">
             <MatButton Icon="stop" Outlined="true" Disabled="!SimulatorManager.IsStarted" OnClick="_simulatorManager.StopSimulatorAsync">Stop simulator</MatButton>
@@ -22,23 +22,23 @@
             <MatPaper Elevation="3" Rounded="true" Style="margin-bottom: 10px;">
                 <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
                     <span style="flex-grow: 1;">Actuators</span>
-                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Actuators)" Disabled="BoardModel.Actuators == null || !BoardModel.Actuators.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Actuators)" />
+                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Actuators)" Disabled="SimulatorData.InitialBoard.Actuators == null || !SimulatorData.InitialBoard.Actuators.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Actuators)" />
                 </div>
                 <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
                     <span style="flex-grow: 1;">Bubbles</span>
-                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Bubbles)" Disabled="BoardModel.Bubbles == null || !BoardModel.Bubbles.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Bubbles)" />
+                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Bubbles)" Disabled="SimulatorData.InitialBoard.Bubbles == null || !SimulatorData.InitialBoard.Bubbles.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Bubbles)" />
                 </div>
                 <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
                     <span style="flex-grow: 1;">Droplets</span>
-                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Droplets)" Disabled="BoardModel.Droplets == null || !BoardModel.Droplets.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Droplets)" />
+                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Droplets)" Disabled="SimulatorData.InitialBoard.Droplets == null || !SimulatorData.InitialBoard.Droplets.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Droplets)" />
                 </div>
                 <div style="margin: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
                     <span style="margin-right: 5px; flex-grow: 1;">Electrodes</span>
-                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Electrodes)" Disabled="BoardModel.Electrodes == null || !BoardModel.Electrodes.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Electrodes)" />
+                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Electrodes)" Disabled="SimulatorData.InitialBoard.Electrodes == null || !SimulatorData.InitialBoard.Electrodes.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Electrodes)" />
                 </div>
                 <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
                     <span style="flex-grow: 1;">Sensors</span>
-                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Sensors)" Disabled="BoardModel.Sensors == null || !BoardModel.Sensors.Any()" ValueChanged="@(e => ToggleVisibility(e, _simulatorManager.BoardModel.Sensors))" />
+                    <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Sensors)" Disabled="SimulatorData.InitialBoard.Sensors == null || !SimulatorData.InitialBoard.Sensors.Any()" ValueChanged="@(e => ToggleVisibility(e, _simulatorManager.BoardModel.Sensors))" />
                 </div>
             </MatPaper>
             <MatPaper Elevation="3" Rounded="true">
@@ -105,13 +105,7 @@
     public Simulator SimulatorPage { get; set; }
 
     [Parameter]
-    public BoardModel BoardModel { get; set; }
-
-    [Parameter]
-    public List<BoardModel> BoardModelNew { get; set; }
-
-    [Parameter]
-    public List<int> AnimationTimePoints { get; set; }
+    public SimulatorData SimulatorData { get; set; }
 
     private SimulatorManager _simulatorManager;
     private BaseElementModel _activeElement;
@@ -146,7 +140,7 @@
             SimulatorManager.AnimationSpeedFactor = animationSpeedFactor;
         }
 
-        _simulatorManager = new(AnimationTimePoints, BoardModel, BoardModelNew);
+        _simulatorManager = new(SimulatorData);
         _simulatorManager.SimulatorStateChanged += (o, args) => NewAnimation(args);
     }
 
@@ -202,7 +196,7 @@
         }
         else
         {
-            SimulatorManager.PauseSimulator();
+            await _simulatorManager.PauseSimulatorAsync();
         }
     }
 }

@@ -17,11 +17,12 @@ namespace DMF_Simulator_Frontend.Models
         public static bool IsPaused { get; private set; } = true;
         public static int AnimationSpeedFactor { get; set; } = 1;
         private static int _startSimFromState;
+        private bool _processingChanges;
 
-        public SimulatorManager(List<int> animationTimePoints, BoardModel boardModel, List<BoardModel> boardModelNew)
+        public SimulatorManager(SimulatorData simulatorData)
         {
-            BoardModel = boardModel;
-            AnimationTimePoints = animationTimePoints;
+            BoardModel = simulatorData.InitialBoard;
+            AnimationTimePoints = simulatorData.AnimationTimePoints;
 
             InitialState = new();
             InitialState.Droplets = new();
@@ -29,7 +30,7 @@ namespace DMF_Simulator_Frontend.Models
             InitialState.Electrodes = new();
             BoardModel.Electrodes.ForEach(element => InitialState.Electrodes.Add(element with { }));
 
-            BoardStates = boardModelNew;
+            BoardStates = simulatorData.BoardStates;
         }
 
         private static void ElementChanges<T>(T oldElement, T newElement) where T : ElementModel
@@ -48,6 +49,7 @@ namespace DMF_Simulator_Frontend.Models
         {
             foreach (BoardModel newBoard in BoardStates.GetRange(_startSimFromState, BoardStates.Count - _startSimFromState))
             {
+                _processingChanges = true;
                 if (IsStarted && !IsPaused)
                 {
                     // Process 1 change.
@@ -56,19 +58,19 @@ namespace DMF_Simulator_Frontend.Models
                     sw.Stop();
                     long changeTime = sw.ElapsedMilliseconds;
                     Console.WriteLine("Elapsed after processing changes: {0}", changeTime);
-                    
+
                     // Raise event. Rerender simulator component.
                     sw.Restart();
                     int speed = AnimationSpeedFactor * (AnimationTimePoints.ElementAt(_startSimFromState + 1) - AnimationTimePoints.ElementAt(_startSimFromState));
                     ElementModel.AnimationSpeed = speed;
-                    
+
                     AnimationEventArgs args = new();
-                    args.CurrentAnimationName = AnimationTimePoints.ElementAt(_startSimFromState).ToString() + ".json";
+                    args.CurrentAnimationName = AnimationTimePoints.ElementAt(_startSimFromState + 1).ToString() + ".json";
                     SimulatorStateChanged?.Invoke(this, args);
-                    
+
                     long eventTime = sw.ElapsedMilliseconds;
                     Console.WriteLine("Elapsed after invoking event: {0}", eventTime);
-                    
+
                     // Delay processing to follow animation timing.
                     sw.Restart();
                     speed = speed - changeTime - eventTime <= 0 ? 1 : (int)(speed - changeTime - eventTime);
@@ -79,6 +81,7 @@ namespace DMF_Simulator_Frontend.Models
                 }
                 else
                 {
+                    _processingChanges = false;
                     break;
                 }
             }
@@ -113,20 +116,23 @@ namespace DMF_Simulator_Frontend.Models
                 });
 
                 // Add newly created droplets to the current list (board)
-                IEnumerable<DropletModel> newDroplets = newBoard.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID));
+                IEnumerable<DropletModel> newDroplets = newBoard.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID)).Select(element => element with { });
                 BoardModel.Droplets.AddRange(newDroplets);
             }
         }
 
         public async Task StartSimulatorAsync()
         {
-            if (!IsStarted || IsPaused)
+            // Only start simulator if no changes are being processed and it's not started yet or it's paused.
+            if ((!IsStarted || IsPaused) && !_processingChanges)
             {
+                Console.WriteLine("Starting from: {0}", _startSimFromState);
                 IsStarted = true;
                 IsPaused = false;
                 if (_startSimFromState < BoardStates.Count)
                 {
                     await ProcessChangesAsync();
+                    _processingChanges = false;
                 }
                 if (_startSimFromState >= BoardStates.Count)
                 {
@@ -135,24 +141,41 @@ namespace DMF_Simulator_Frontend.Models
             }
         }
 
-        public static void PauseSimulator()
+        public async Task PauseSimulatorAsync()
         {
+            // Pause simulator.
             IsPaused = true;
+
+            // Wait for async Processing changes to finish.
+            while (_processingChanges)
+            {
+                await Task.Delay(1);
+            }
         }
 
         public async Task StopSimulatorAsync()
         {
+            // Stop simulator.
             IsStarted = false;
             IsPaused = true;
+
+            // Wait for async Processing changes to finish.
+            while (_processingChanges)
+            {
+                await Task.Delay(1);
+            }
+
+            // Reset to initial state.
             _startSimFromState = 0;
 
-            BoardModel.Droplets = new();
+            BoardModel.Droplets.Clear();
             InitialState.Droplets.ForEach(element => BoardModel.Droplets.Add(element with { }));
-            BoardModel.Electrodes = new();
+            BoardModel.Electrodes.Clear();
             InitialState.Electrodes.ForEach(element => BoardModel.Electrodes.Add(element with { }));
 
+            // Raise event. Rerender simulator component.
             AnimationEventArgs args = new();
-            args.CurrentAnimationName = "0.json";
+            args.CurrentAnimationName = AnimationTimePoints.FirstOrDefault().ToString() + ".json";
             SimulatorStateChanged?.Invoke(this, args);
             await Task.Delay(ElementModel.AnimationSpeed);
         }
