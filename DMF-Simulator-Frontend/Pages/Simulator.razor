@@ -4,9 +4,10 @@
 @inject IMatToaster Toaster
 @inject IConfiguration Configuration
 
-@if (_simulatorData == null)
+@if (_simulatorData == null || _simulatorData.InitialBoard == null)
 {
     <MatFileUpload OnChange="MultipleFilesReady" AllowMultiple="true" Label="Drop files here or Browse"></MatFileUpload>
+    <div style="padding-top: 10px; text-align: center">To load simulator data click on the card above or drop files directly into it. The initial file should be named "@Configuration["initialBoardFileName"]".</div>
 }
 else if (_simulatorData.InitialBoard != null && _simulatorData.BoardStates != null && _simulatorData.AnimationTimePoints != null)
 {
@@ -26,6 +27,7 @@ else
     /*protected override async Task OnInitializedAsync()
     {
         _simulatorData = new();
+        _simulatorData.InitialBoard = new();
 
         //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board4x3.json");
         //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10.json");
@@ -34,7 +36,7 @@ else
         //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20.json");
         //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/32x20_mini.json");
         //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/0.json");
-        _simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10F.json");
+            _simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board10x10F.json");
         //_simulatorData.InitialBoard = await Http.GetFromJsonAsync<BoardModel>("sample-data/board32x20(2).json");
 
         _simulatorData.BoardStates = new();
@@ -52,9 +54,13 @@ else
             ISimulatorDataLoader dataLoader = new Simulator();
             _simulatorData = await dataLoader.LoadSimulatorDataAsync(files, Configuration["initialBoardFileName"]);
 
-            if (files.Length > 0)
+            if (files.Length > 0 && _simulatorData != null && _simulatorData.InitialBoard != null)
             {
                 Toaster.Add("Successfully Uploaded Files", MatToastType.Success, "Success", "");
+            }
+            else
+            {
+                Toaster.Add("Initial Board Required", MatToastType.Danger, "Error", "");
             }
         }
         catch (Exception e)
