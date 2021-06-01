@@ -26,10 +26,7 @@ namespace DMF_Simulator_Frontend.Models
             AnimationTimePoints = simulatorData.AnimationTimePoints;
 
             InitialState = new();
-            InitialState.Droplets = new();
-            BoardModel.Droplets.ForEach(element => InitialState.Droplets.Add(element with { }));
-            InitialState.Electrodes = new();
-            BoardModel.Electrodes.ForEach(element => InitialState.Electrodes.Add(element with { }));
+            InitialState.CopySampleBoard(BoardModel);
 
             BoardStates = simulatorData.BoardStates;
         }
@@ -168,11 +165,8 @@ namespace DMF_Simulator_Frontend.Models
 
             // Reset to initial state.
             _startSimFromState = 0;
-
-            BoardModel.Droplets.Clear();
-            InitialState.Droplets.ForEach(element => BoardModel.Droplets.Add(element with { }));
-            BoardModel.Electrodes.Clear();
-            InitialState.Electrodes.ForEach(element => BoardModel.Electrodes.Add(element with { }));
+            BoardModel.ClearBoard();
+            BoardModel.CopySampleBoard(InitialState);
 
             // Raise event. Rerender simulator component.
             AnimationEventArgs args = new();
