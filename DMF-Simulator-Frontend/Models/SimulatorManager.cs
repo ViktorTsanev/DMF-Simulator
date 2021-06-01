@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using DMF_Simulator_Frontend.Components;
 
 namespace DMF_Simulator_Frontend.Models
 {
@@ -116,7 +117,7 @@ namespace DMF_Simulator_Frontend.Models
                 });
 
                 // Add newly created droplets to the current list (board)
-                IEnumerable<DropletModel> newDroplets = newBoard.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID)).Select(element => element with { });
+                IEnumerable<DropletModel> newDroplets = newBoard.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID)).Select(element => element with { Visible = SimulatorContainer.IsVisible(BoardModel.Droplets) });
                 BoardModel.Droplets.AddRange(newDroplets);
             }
         }
