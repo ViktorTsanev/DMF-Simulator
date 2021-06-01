@@ -17,10 +17,11 @@ namespace DMF_Simulator_Frontend.Models
             return info;
         }
 
-        public override void ApplyElementChanges(ElementModel newElement)
+        public override void ApplyElementChanges(BaseElementModel newElement)
         {
             base.ApplyElementChanges(newElement);
             Substance_Name = ((DropletModel)newElement).Substance_Name;
+            Color = ((DropletModel)newElement).Color;
             Temperature = ((DropletModel)newElement).Temperature;
         }
     }

@@ -5,11 +5,11 @@ namespace DMF_Simulator_Frontend.Models
 {
     public record ElectrodeModel : ElementModel
     {
-        public int ElectrodeID { get; set; }
-        public int DriverID { get; set; }
-        public int Shape { get; set; }
+        public int ElectrodeID { get; init; }
+        public int DriverID { get; init; }
+        public int Shape { get; init; }
         public int Status { get; set; }
-        public List<List<int>> Corners { get; set; }
+        public List<List<int>> Corners { get; init; }
 
         public override Dictionary<string, string> GetElementInfo()
         {
@@ -32,7 +32,7 @@ namespace DMF_Simulator_Frontend.Models
             return info;
         }
 
-        public override void ApplyElementChanges(ElementModel newElement)
+        public override void ApplyElementChanges(BaseElementModel newElement)
         {
             base.ApplyElementChanges(newElement);
             Status = ((ElectrodeModel)newElement).Status;

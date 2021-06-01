@@ -4,8 +4,8 @@ namespace DMF_Simulator_Frontend.Models
 {
     public abstract record ElementModel : BaseElementModel
     {
-        public int SizeX { get; set; }
-        public int SizeY { get; set; }
+        public int SizeX { get; init; }
+        public int SizeY { get; init; }
         public int TranslateX { get; set; }
         public int TranslateY { get; set; }
         public double ScaleX { get; set; } = 1;
@@ -41,12 +41,13 @@ namespace DMF_Simulator_Frontend.Models
             return info;
         }
 
-        public virtual void ApplyElementChanges(ElementModel newElement)
+        public override void ApplyElementChanges(BaseElementModel newElement)
         {
+            base.ApplyElementChanges(newElement);
             TranslateX += newElement.PositionX - PositionX - TranslateX;
             TranslateY += newElement.PositionY - PositionY - TranslateY;
-            ScaleX = (double)newElement.SizeX / SizeX;
-            ScaleY = (double)newElement.SizeY / SizeY;
+            ScaleX = (double)((ElementModel)newElement).SizeX / SizeX;
+            ScaleY = (double)((ElementModel)newElement).SizeY / SizeY;
         }
     }
 }

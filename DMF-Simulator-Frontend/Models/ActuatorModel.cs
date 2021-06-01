@@ -5,14 +5,14 @@ namespace DMF_Simulator_Frontend.Models
 {
     public record ActuatorModel : ElementModel
     {
-        public int ActuatorID { get; set; }
-        public string Type { get; set; }
+        public int ActuatorID { get; init; }
+        public string Type { get; init; }
         public int ActualTemperature { get; set; }
         public int DesiredTemperature { get; set; }
         public bool Status { get; set; }
         public int NextDesiredTemperature { get; set; }
         public bool NextStatus { get; set; }
-        public List<List<int>> Corners { get; set; }
+        public List<List<int>> Corners { get; init; }
 
         public override Dictionary<string, string> GetElementInfo()
         {
@@ -38,7 +38,7 @@ namespace DMF_Simulator_Frontend.Models
             return info;
         }
 
-        public override void ApplyElementChanges(ElementModel newElement)
+        public override void ApplyElementChanges(BaseElementModel newElement)
         {
             base.ApplyElementChanges(newElement);
             ActualTemperature = ((ActuatorModel)newElement).ActualTemperature;

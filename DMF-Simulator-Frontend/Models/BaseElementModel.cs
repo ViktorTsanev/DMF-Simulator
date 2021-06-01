@@ -5,9 +5,9 @@ namespace DMF_Simulator_Frontend.Models
     public abstract record BaseElementModel
     {
         public string Name { get; set; }
-        public int ID { get; set; }
-        public int PositionX { get; set; }
-        public int PositionY { get; set; }
+        public int ID { get; init; }
+        public int PositionX { get; init; }
+        public int PositionY { get; init; }
 
         public virtual Dictionary<string, string> GetElementInfo()
         {
@@ -17,6 +17,11 @@ namespace DMF_Simulator_Frontend.Models
             info.TryAdd("PositionX", PositionX.ToString());
             info.TryAdd("PositionY", PositionY.ToString());
             return info;
+        }
+
+        public virtual void ApplyElementChanges(BaseElementModel newElement)
+        {
+            Name = newElement.Name;
         }
     }
 }

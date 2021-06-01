@@ -4,8 +4,8 @@ namespace DMF_Simulator_Frontend.Models
 {
     public record SensorModel : ElementModel
     {
-        public int SensorID { get; set; }
-        public string Type { get; set; }
+        public int SensorID { get; init; }
+        public string Type { get; init; }
         public int ValueRed { get; set; }
         public int ValueGreen { get; set; }
         public int ValueBlue { get; set; }
@@ -21,7 +21,7 @@ namespace DMF_Simulator_Frontend.Models
             return info;
         }
 
-        public override void ApplyElementChanges(ElementModel newElement)
+        public override void ApplyElementChanges(BaseElementModel newElement)
         {
             base.ApplyElementChanges(newElement);
             ValueRed = ((SensorModel)newElement).ValueRed;

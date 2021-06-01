@@ -4,7 +4,7 @@ namespace DMF_Simulator_Frontend.Models
 {
     public record InputModel : BaseElementModel
     {
-        public int InputID { get; set; }
+        public int InputID { get; init; }
 
         public override Dictionary<string, string> GetElementInfo()
         {
