@@ -31,18 +31,6 @@ namespace DMF_Simulator_Frontend.Models
             BoardStates = simulatorData.BoardStates;
         }
 
-        private static void ElementChanges<T>(T oldElement, T newElement) where T : ElementModel
-        {
-            oldElement.TranslateX += newElement.PositionX - oldElement.PositionX - oldElement.TranslateX;
-            //Console.WriteLine("TrX {0} ID {1}", oldElement.TranslateX, oldElement.ID);
-            oldElement.TranslateY += newElement.PositionY - oldElement.PositionY - oldElement.TranslateY;
-            //Console.WriteLine("TrY {0} ID {1}", oldElement.TranslateY, oldElement.ID);
-            oldElement.ScaleX = (double)newElement.SizeX / oldElement.SizeX;
-            //Console.WriteLine("ScaleX {0} ID {1}", oldElement.ScaleX, oldElement.ID);
-            oldElement.ScaleY = (double)newElement.SizeY / oldElement.SizeY;
-            //Console.WriteLine("ScaleY {0} ID {1}", oldElement.ScaleY, oldElement.ID);
-        }
-
         private async Task ProcessChangesAsync()
         {
             foreach (BoardModel newBoard in BoardStates.GetRange(_startSimFromState, BoardStates.Count - _startSimFromState))
@@ -89,34 +77,94 @@ namespace DMF_Simulator_Frontend.Models
         {
             if (newBoard.Electrodes != null)
             {
+                if (BoardModel.Electrodes == null)
+                {
+                    BoardModel.Electrodes = new();
+                }
                 newBoard.Electrodes.ForEach(e =>
                 {
                     ElectrodeModel changedElectrode = BoardModel.Electrodes.Where(t => t.ID == e.ID).FirstOrDefault();
                     if (changedElectrode != null)
                     {
-                        ElementChanges(changedElectrode, e);
-                        changedElectrode.Status = e.Status;
+                        changedElectrode.ApplyElementChanges(e);
+                    }
+                });
+            }
+
+            if (newBoard.Actuators != null)
+            {
+                if (BoardModel.Actuators == null)
+                {
+                    BoardModel.Actuators = new();
+                }
+                newBoard.Actuators.ForEach(a =>
+                {
+                    ActuatorModel changedActuator = BoardModel.Actuators.Where(t => t.ID == a.ID).FirstOrDefault();
+                    if (changedActuator != null)
+                    {
+                        changedActuator.ApplyElementChanges(a);
+                    }
+                });
+            }
+
+            if (newBoard.Sensors != null)
+            {
+                if (BoardModel.Sensors == null)
+                {
+                    BoardModel.Sensors = new();
+                }
+                newBoard.Sensors.ForEach(s =>
+                {
+                    SensorModel changedSensor = BoardModel.Sensors.Where(t => t.ID == s.ID).FirstOrDefault();
+                    if (changedSensor != null)
+                    {
+                        changedSensor.ApplyElementChanges(s);
                     }
                 });
             }
 
             if (newBoard.Droplets != null)
             {
+                if (BoardModel.Droplets == null)
+                {
+                    BoardModel.Droplets = new();
+                }
                 newBoard.Droplets.ForEach(d =>
                 {
                     DropletModel changedDroplet = BoardModel.Droplets.Where(t => t.ID == d.ID).FirstOrDefault();
                     if (changedDroplet != null)
                     {
-                        ElementChanges(changedDroplet, d);
-                        changedDroplet.Substance_Name = d.Substance_Name;
-                        changedDroplet.Temperature = d.Temperature;
+                        changedDroplet.ApplyElementChanges(d);
                     }
                 });
 
-                // Add newly created droplets to the current list (board)
-                IEnumerable<DropletModel> newDroplets = newBoard.Droplets.Where(p => !BoardModel.Droplets.Any(p2 => p2.ID == p.ID)).Select(element => element with { Visible = SimulatorContainer.IsVisible(BoardModel.Droplets) });
-                BoardModel.Droplets.AddRange(newDroplets);
+                // Add newly created droplets to the current board.
+                BoardModel.Droplets.AddRange(GetNewElements(BoardModel.Droplets, newBoard.Droplets));
             }
+
+            if (newBoard.Bubbles != null)
+            {
+                if (BoardModel.Bubbles == null)
+                {
+                    BoardModel.Bubbles = new();
+                }
+                newBoard.Bubbles.ForEach(b =>
+                {
+                    BubbleModel changedBubble = BoardModel.Bubbles.Where(t => t.ID == b.ID).FirstOrDefault();
+                    if (changedBubble != null)
+                    {
+                        changedBubble.ApplyElementChanges(b);
+                    }
+                });
+
+                // Add newly created bubbles to the current board.
+                BoardModel.Bubbles.AddRange(GetNewElements(BoardModel.Bubbles, newBoard.Bubbles));
+            }
+        }
+
+        private static IEnumerable<T> GetNewElements<T>(IList<T> oldElementList, IList<T> newElementList) where T : ElementModel
+        {
+            return newElementList.Where(p => !oldElementList.Any(p2 => p2.ID == p.ID)).Select(element => element with { Visible = SimulatorContainer.IsVisible(oldElementList) });
         }
 
         public async Task StartSimulatorAsync()

@@ -20,5 +20,13 @@ namespace DMF_Simulator_Frontend.Models
             info.TryAdd("Value Blue", ValueBlue.ToString());
             return info;
         }
+
+        public override void ApplyElementChanges(ElementModel newElement)
+        {
+            base.ApplyElementChanges(newElement);
+            ValueRed = ((SensorModel)newElement).ValueRed;
+            ValueGreen = ((SensorModel)newElement).ValueGreen;
+            ValueBlue = ((SensorModel)newElement).ValueBlue;
+        }
     }
 }

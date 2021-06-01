@@ -31,5 +31,11 @@ namespace DMF_Simulator_Frontend.Models
             }
             return info;
         }
+
+        public override void ApplyElementChanges(ElementModel newElement)
+        {
+            base.ApplyElementChanges(newElement);
+            Status = ((ElectrodeModel)newElement).Status;
+        }
     }
 }

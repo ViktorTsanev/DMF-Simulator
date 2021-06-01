@@ -40,5 +40,13 @@ namespace DMF_Simulator_Frontend.Models
 
             return info;
         }
+
+        public virtual void ApplyElementChanges(ElementModel newElement)
+        {
+            TranslateX += newElement.PositionX - PositionX - TranslateX;
+            TranslateY += newElement.PositionY - PositionY - TranslateY;
+            ScaleX = (double)newElement.SizeX / SizeX;
+            ScaleY = (double)newElement.SizeY / SizeY;
+        }
     }
 }

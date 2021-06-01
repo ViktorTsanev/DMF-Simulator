@@ -44,38 +44,74 @@ namespace DMF_Simulator_Frontend.Models
         {
             if (sampleBoard.Information != null)
             {
+                if (Information == null)
+                {
+                    Information = new();
+                }
                 sampleBoard.Information.ForEach(element => Information.Add(element with { }));
             }
             if (sampleBoard.Electrodes != null)
             {
+                if (Electrodes == null)
+                {
+                    Electrodes = new();
+                }
                 sampleBoard.Electrodes.ForEach(element => Electrodes.Add(element with { }));
             }
             if (sampleBoard.Actuators != null)
             {
+                if (Actuators == null)
+                {
+                    Actuators = new();
+                }
                 sampleBoard.Actuators.ForEach(element => Actuators.Add(element with { }));
             }
             if (sampleBoard.Sensors != null)
             {
+                if (Sensors == null)
+                {
+                    Sensors = new();
+                }
                 sampleBoard.Sensors.ForEach(element => Sensors.Add(element with { }));
             }
             if (sampleBoard.Inputs != null)
             {
+                if (Inputs == null)
+                {
+                    Inputs = new();
+                }
                 sampleBoard.Inputs.ForEach(element => Inputs.Add(element with { }));
             }
             if (sampleBoard.Outputs != null)
             {
+                if (Outputs == null)
+                {
+                    Outputs = new();
+                }
                 sampleBoard.Outputs.ForEach(element => Outputs.Add(element with { }));
             }
             if (sampleBoard.Droplets != null)
             {
+                if (Droplets == null)
+                {
+                    Droplets = new();
+                }
                 sampleBoard.Droplets.ForEach(element => Droplets.Add(element with { }));
             }
             if (sampleBoard.Bubbles != null)
             {
+                if (Bubbles == null)
+                {
+                    Bubbles = new();
+                }
                 sampleBoard.Bubbles.ForEach(element => Bubbles.Add(element with { }));
             }
             if (sampleBoard.Unclassified != null)
             {
+                if (Unclassified == null)
+                {
+                    Unclassified = new();
+                }
                 sampleBoard.Unclassified.ForEach(element => Unclassified.Add(element with { }));
             }
         }

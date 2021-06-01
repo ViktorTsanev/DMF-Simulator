@@ -37,5 +37,15 @@ namespace DMF_Simulator_Frontend.Models
             }
             return info;
         }
+
+        public override void ApplyElementChanges(ElementModel newElement)
+        {
+            base.ApplyElementChanges(newElement);
+            ActualTemperature = ((ActuatorModel)newElement).ActualTemperature;
+            DesiredTemperature = ((ActuatorModel)newElement).DesiredTemperature;
+            Status = ((ActuatorModel)newElement).Status;
+            NextDesiredTemperature = ((ActuatorModel)newElement).NextDesiredTemperature;
+            NextStatus = ((ActuatorModel)newElement).NextStatus;
+        }
     }
 }

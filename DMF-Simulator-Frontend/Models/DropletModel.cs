@@ -16,5 +16,12 @@ namespace DMF_Simulator_Frontend.Models
             info.TryAdd("Temperature", Temperature.ToString());
             return info;
         }
+
+        public override void ApplyElementChanges(ElementModel newElement)
+        {
+            base.ApplyElementChanges(newElement);
+            Substance_Name = ((DropletModel)newElement).Substance_Name;
+            Temperature = ((DropletModel)newElement).Temperature;
+        }
     }
 }
