@@ -17,26 +17,27 @@
             </MatPaper>
         </div>
     </div>
+
     <div class="row" style="flex-grow: 1">
         <div class="col-3 col-lg-2">
             <MatPaper Elevation="3" Rounded="true" Style="margin-bottom: 10px;">
-                <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
+                <div class="toggle-container">
                     <span style="flex-grow: 1;">Actuators</span>
                     <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Actuators)" Disabled="SimulatorData.InitialBoard.Actuators == null || !SimulatorData.InitialBoard.Actuators.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Actuators)" />
                 </div>
-                <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
+                <div class="toggle-container">
                     <span style="flex-grow: 1;">Bubbles</span>
                     <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Bubbles)" Disabled="SimulatorData.InitialBoard.Bubbles == null || !SimulatorData.InitialBoard.Bubbles.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Bubbles)" />
                 </div>
-                <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
+                <div class="toggle-container">
                     <span style="flex-grow: 1;">Droplets</span>
                     <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Droplets)" Disabled="SimulatorData.InitialBoard.Droplets == null || !SimulatorData.InitialBoard.Droplets.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Droplets)" />
                 </div>
-                <div style="margin: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
-                    <span style="margin-right: 5px; flex-grow: 1;">Electrodes</span>
+                <div class="toggle-container">
+                    <span style="flex-grow: 1;">Electrodes</span>
                     <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Electrodes)" Disabled="SimulatorData.InitialBoard.Electrodes == null || !SimulatorData.InitialBoard.Electrodes.Any()" ValueChanged="e => ToggleVisibility(e, _simulatorManager.BoardModel.Electrodes)" />
                 </div>
-                <div style="padding: 5px; box-sizing: border-box; display: flex; flex-wrap: wrap;">
+                <div class="toggle-container">
                     <span style="flex-grow: 1;">Sensors</span>
                     <MatSlideToggle TValue="bool" Value="IsVisible(_simulatorManager.BoardModel.Sensors)" Disabled="SimulatorData.InitialBoard.Sensors == null || !SimulatorData.InitialBoard.Sensors.Any()" ValueChanged="@(e => ToggleVisibility(e, _simulatorManager.BoardModel.Sensors))" />
                 </div>

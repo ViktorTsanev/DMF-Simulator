@@ -1,0 +1,6 @@
+﻿.toggle-container {
+    padding: 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+}
