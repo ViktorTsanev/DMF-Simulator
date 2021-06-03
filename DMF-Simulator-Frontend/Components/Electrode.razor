@@ -1,7 +1,7 @@
 ﻿@inject IConfiguration Configuration
 
-<div class="electrode-div" width="@_containerWidth" height="@_containerHeight" style="@_divCss">
-    <svg class="electrode-svg" width="@_containerWidth" height="@_containerHeight">
+<div class="electrode-div" width="@Model.SizeX" height="@Model.SizeY" style="@_divCss">
+    <svg class="electrode-svg" width="@Model.SizeX" height="@Model.SizeY">
         @if (Model.Shape == 0)
         {
             <rect class="electrode" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" @onmouseover="OnHoverCallback" />
@@ -29,8 +29,6 @@
     private string _shapeCss => $"fill: {(Model.Status == 0 ? Configuration["electrodeOffColor"] : Configuration["electrodeOnColor"])}; stroke-width: {_strokeWidth}; stroke: {Configuration["electrodeStrokeColor"]};";
 
     private double _strokeWidth;
-    private double _containerWidth => Model.SizeX + 2 * _strokeWidth; // maybe remove strokewidth
-    private double _containerHeight => Model.SizeY + 2 * _strokeWidth; // maybe remove strokewidth
 
     protected override void OnInitialized()
     {

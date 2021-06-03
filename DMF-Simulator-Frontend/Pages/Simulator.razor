@@ -73,6 +73,9 @@ else
 
     public void ResetSimulator()
     {
+        SimulatorManager.StartSimFromState = 0;
+        SimulatorManager.IsStarted = false;
+        SimulatorManager.IsPaused = true;
         _simulatorData = null;
     }
 }

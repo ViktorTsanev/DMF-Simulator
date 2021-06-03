@@ -14,10 +14,10 @@ namespace DMF_Simulator_Frontend.Models
         public List<BoardModel> BoardStates { get; private set; }
         public List<int> AnimationTimePoints { get; private set; }
         public event EventHandler<AnimationEventArgs> SimulatorStateChanged;
-        public static bool IsStarted { get; private set; }
-        public static bool IsPaused { get; private set; } = true;
+        public static bool IsStarted { get; set; }
+        public static bool IsPaused { get; set; } = true;
         public static int AnimationSpeedFactor { get; set; } = 1;
-        private static int _startSimFromState;
+        public static int StartSimFromState { get; set; }
         private bool _processingChanges;
 
         public SimulatorManager(SimulatorData simulatorData)
@@ -33,7 +33,7 @@ namespace DMF_Simulator_Frontend.Models
 
         private async Task ProcessChangesAsync()
         {
-            foreach (BoardModel newBoard in BoardStates.GetRange(_startSimFromState, BoardStates.Count - _startSimFromState))
+            foreach (BoardModel newBoard in BoardStates.GetRange(StartSimFromState, BoardStates.Count - StartSimFromState))
             {
                 _processingChanges = true;
                 if (IsStarted && !IsPaused)
@@ -47,11 +47,11 @@ namespace DMF_Simulator_Frontend.Models
 
                     // Raise event. Rerender simulator component.
                     sw.Restart();
-                    int speed = AnimationSpeedFactor * (AnimationTimePoints.ElementAt(_startSimFromState + 1) - AnimationTimePoints.ElementAt(_startSimFromState));
+                    int speed = AnimationSpeedFactor * (AnimationTimePoints.ElementAt(StartSimFromState + 1) - AnimationTimePoints.ElementAt(StartSimFromState));
                     ElementModel.AnimationSpeed = speed;
 
                     AnimationEventArgs args = new();
-                    args.CurrentAnimationName = AnimationTimePoints.ElementAt(_startSimFromState + 1).ToString() + ".json";
+                    args.CurrentAnimationName = AnimationTimePoints.ElementAt(StartSimFromState + 1).ToString() + ".json";
                     SimulatorStateChanged?.Invoke(this, args);
 
                     long eventTime = sw.ElapsedMilliseconds;
@@ -63,7 +63,7 @@ namespace DMF_Simulator_Frontend.Models
                     await Task.Delay(speed);
                     sw.Stop();
                     Console.WriteLine("Elapsed after delay: {0}", sw.ElapsedMilliseconds);
-                    _startSimFromState++;
+                    StartSimFromState++;
                 }
                 else
                 {
@@ -172,15 +172,15 @@ namespace DMF_Simulator_Frontend.Models
             // Only start simulator if no changes are being processed and it's not started yet or it's paused.
             if ((!IsStarted || IsPaused) && !_processingChanges)
             {
-                Console.WriteLine("Starting from: {0}", _startSimFromState);
+                Console.WriteLine("Starting from: {0}", StartSimFromState);
                 IsStarted = true;
                 IsPaused = false;
-                if (_startSimFromState < BoardStates.Count)
+                if (StartSimFromState < BoardStates.Count)
                 {
                     await ProcessChangesAsync();
                     _processingChanges = false;
                 }
-                if (_startSimFromState >= BoardStates.Count)
+                if (StartSimFromState >= BoardStates.Count)
                 {
                     await StopSimulatorAsync();
                 }
@@ -212,7 +212,7 @@ namespace DMF_Simulator_Frontend.Models
             }
 
             // Reset to initial state.
-            _startSimFromState = 0;
+            StartSimFromState = 0;
             BoardModel.ClearBoard();
             BoardModel.CopySampleBoard(InitialState);
 
