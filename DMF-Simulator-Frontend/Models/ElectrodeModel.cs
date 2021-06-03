@@ -23,9 +23,7 @@ namespace DMF_Simulator_Frontend.Models
                 string coords = "";
                 foreach (var corner in Corners)
                 {
-                    int x = corner.First() + PositionX;
-                    int y = corner.Last() + PositionY;
-                    coords += "(" + x + ", " + y + ") ";
+                    coords += "(" + corner.First() + ", " + corner.Last() + ") ";
                 }
                 info.TryAdd("Corners", coords);
             }
