@@ -2,16 +2,16 @@
 
 <div class="container-fluid" style="height: 100vh; display: flex; flex-direction: column">
     <div class="row" style="margin-bottom: 10px;">
-        <div class="col" style="margin-bottom: 5px">
+        <div class="col pl-0 pl-sm-1" style="margin-bottom: 5px">
             <MatButton Icon="@(SimulatorManager.IsPaused ? "play_arrow" : "pause")" Outlined="true" Disabled="!SimulatorData.BoardStates.Any()" OnClick="ChangeSimulatorStateAsync">@SetPlayPauseButtonText()</MatButton>
         </div>
-        <div class="col" style="margin-bottom: 5px">
+        <div class="col pl-0 pl-sm-1" style="margin-bottom: 5px">
             <MatButton Icon="stop" Outlined="true" Disabled="!SimulatorManager.IsStarted" OnClick="_simulatorManager.StopSimulatorAsync">Stop simulator</MatButton>
         </div>
-        <div class="col">
+        <div class="col pl-0 pl-sm-1">
             <MatButton Icon="clear" Outlined="true" OnClick="SimulatorPage.ResetSimulator">Reset simulator</MatButton>
         </div>
-        <div class="col">
+        <div class="col pl-0 pl-sm-1">
             <MatPaper Elevation="3" Rounded="true" Style="width: max-content">
                 <div style="padding: 0px 5px">State: @_currentAnimationName</div>
             </MatPaper>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="row" style="flex-grow: 1">
-        <div class="col-3 col-lg-2">
+        <div class="col-3 col-lg-2 pl-0 pl-sm-1">
             <MatPaper Elevation="3" Rounded="true" Style="margin-bottom: 10px;">
                 <div class="toggle-container">
                     <span style="flex-grow: 1;">Actuators</span>
@@ -47,7 +47,7 @@
             </MatPaper>
         </div>
 
-        <div class="col-9 col-lg-10">
+        <div class="col-9 col-lg-10 pr-0 pr-sm-1">
             <div style="display: flex;">
                 <span style="flex-grow: @(_scaleFactor / _sliderMaxValue);">@(_sliderMinValue * 100)%</span>
                 <span style="flex-grow: @(1 - _scaleFactor / _sliderMaxValue);">@(Math.Round(_scaleFactor * 100))%</span>
