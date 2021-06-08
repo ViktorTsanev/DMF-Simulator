@@ -1,7 +1,7 @@
 ﻿@inject IConfiguration Configuration
 
-<div class="bubble-div" width="@_containerWidth" height="@_containerHeight" style="@_divCss">
-    <svg class="bubble-svg" width="@_containerWidth" height="@_containerHeight">
+<div class="bubble-div" width="@Model.SizeX" height="@Model.SizeY" style="@_divCss">
+    <svg class="bubble-svg" width="@Model.SizeX" height="@Model.SizeY">
         <ellipse class="bubble" cx="@_xCenter" cy="@_yCenter" rx="@_xRadius" ry="@_yRadius" style="@_shapeCss" @onmouseover="OnHoverCallback" />
     </svg>
 </div>
@@ -13,19 +13,16 @@
     [Parameter]
     public EventCallback<MouseEventArgs> OnHoverCallback { get; set; }
 
-    private string _divCss => $"left: {Model.PositionX - _strokeWidth}px; top: {Model.PositionY - _strokeWidth}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform {ElementModel.AnimationSpeed}ms; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
+    private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform {ElementModel.AnimationSpeed}ms; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
     private string _shapeCss => $"fill-opacity: 0; stroke-width:{_strokeWidth}; stroke:{Configuration["bubbleStrokeColor"]};";
 
-    private double _xRadius => (double)Model.SizeX / 2;
-    private double _yRadius => (double)Model.SizeY / 2;
+    private double _xRadius => ((double)Model.SizeX - _strokeWidth) / 2;
+    private double _yRadius => ((double)Model.SizeY - _strokeWidth) / 2;
 
     private double _strokeWidth;
 
-    private double _containerWidth => Model.SizeX + 2 * _strokeWidth;
-    private double _containerHeight => Model.SizeY + 2 * _strokeWidth;
-
-    private double _xCenter => _xRadius + _strokeWidth;
-    private double _yCenter => _yRadius + _strokeWidth;
+    private double _xCenter => _xRadius + _strokeWidth / 2;
+    private double _yCenter => _yRadius + _strokeWidth / 2;
 
     protected override void OnInitialized()
     {

@@ -16,7 +16,7 @@
     private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; visibility: {(Model.Visible ? "visible" : "hidden")}; transition: transform {ElementModel.AnimationSpeed}ms; transform: translate({Model.TranslateX}px, {Model.TranslateY}px) scale({Model.ScaleX}, {Model.ScaleY});";
     private string _shapeCss => $"fill: {Model.Color}; stroke-width: {_strokeWidth}; stroke: {Configuration["dropletStrokeColor"]};";
 
-    private double _xRadius => ((double)Model.SizeX -_strokeWidth) / 2;
+    private double _xRadius => ((double)Model.SizeX - _strokeWidth) / 2;
     private double _yRadius => ((double)Model.SizeY - _strokeWidth) / 2;
 
     private double _strokeWidth;

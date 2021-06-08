@@ -1,7 +1,7 @@
 ﻿@inject IConfiguration Configuration
 
-<div class="electrode-div" width="@Model.SizeX" height="@Model.SizeY" style="@_divCss">
-    <svg class="electrode-svg" width="@Model.SizeX" height="@Model.SizeY">
+<div class="electrode-div" width="@_containerWidth" height="@_containerHeight" style="@_divCss">
+    <svg class="electrode-svg" width="@_containerWidth" height="@_containerHeight">
         @if (Model.Shape == 0)
         {
             <rect class="electrode" width="@Model.SizeX" height="@Model.SizeY" style="@_shapeCss" @onmouseover="OnHoverCallback" />
@@ -27,6 +27,9 @@
 
     private string _divCss => $"left: {Model.PositionX}px; top: {Model.PositionY}px; visibility: {(Model.Visible ? "visible" : "hidden")};";
     private string _shapeCss => $"fill: {(Model.Status == 0 ? Configuration["electrodeOffColor"] : Configuration["electrodeOnColor"])}; stroke-width: {_strokeWidth}; stroke: {Configuration["electrodeStrokeColor"]};";
+
+    private int _containerWidth => Model.Shape == 0 ? Model.SizeX : Model.Corners.Select(corner => corner.FirstOrDefault()).Max() - Model.Corners.Select(corner => corner.FirstOrDefault()).Min();
+    private int _containerHeight => Model.Shape == 0 ? Model.SizeY : Model.Corners.Select(corner => corner.LastOrDefault()).Max() - Model.Corners.Select(corner => corner.LastOrDefault()).Min();
 
     private double _strokeWidth;
 
