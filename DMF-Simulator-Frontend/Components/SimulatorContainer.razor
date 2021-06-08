@@ -54,7 +54,7 @@
                 <span>@(_sliderMaxValue * 100)%</span>
             </div>
             <MatSlider TValue="double" ValueMin="@_sliderMinValue" ValueMax="@_sliderMaxValue" @bind-Value="@_scaleFactor" Immediate="false"></MatSlider>
-            <MatPaper Elevation="0" Style="width: 100%; height: 100%; overflow: scroll">
+            <MatPaper Elevation="0" Style="width: 100%; height: 100%; overflow: scroll; -webkit-filter: blur(0px);">
                 <div class="simulator-container" width="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeX" height="@_simulatorManager.BoardModel.Information.FirstOrDefault().SizeY" style="@_divCss" @onmouseout="() => ActivateElement(null)">
                     @if (_simulatorManager.BoardModel.Electrodes != null)
                     {
